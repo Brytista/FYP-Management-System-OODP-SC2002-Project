@@ -205,15 +205,6 @@ public class Supervisor extends User {
         return null;
     }
 
-    private Supervisor selectProject(String RecipientID){
-        for(Supervisor supervisor: allSupervisor){
-            if(supervisor.getUserID() == RecipientID && supervisor.isFYPCoordinator()){
-                return supervisor;
-            }
-        }
-        return null;
-    }
-
     public int addPendingRequest(Request request) {
         if (request == null)
             return 0;
