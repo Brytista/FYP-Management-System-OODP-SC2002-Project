@@ -7,8 +7,7 @@ abstract class User {
 
     private String userID;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String name;
     private boolean loggedIn = false;
     private String email;
 
@@ -17,13 +16,16 @@ abstract class User {
     private List<Request> requestHistory = new ArrayList<>();
 
     // Constructor
-    public User(String userID, String password, String firstName, String lastName, String email) {
+    public User(String userID, String password, String name, String email) {
         this.userID = userID;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.email = email;
     }
+
+    // chooseAndSetRequest(): user selects the request they want to make; 1 returned
+    // if successful, otherwise 0 and error is logged
+    public abstract int chooseAndSetRequest(int requestID);
 
     // getUserID(): returns the userID
     public String getUserID() {
@@ -45,15 +47,14 @@ abstract class User {
 
     // getUserName(): returns the user's name
     public String getUserName() {
-        return firstName + " " + lastName;
+        return name;
     }
 
     // setUserName(): sets the user's name; 1 returned if successful, otherwise 0
     // and error is logged
-    public int setUserName(String firstName, String lastName) {
+    public int setUserName(String name) {
         try {
-            this.firstName = firstName;
-            this.lastName = lastName;
+            this.name = name;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
@@ -158,19 +159,6 @@ abstract class User {
     public int addNewRequest(String request) {
         try {
             availableRequests.add(request);
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            return 0;
-        }
-
-        return 1;
-    }
-
-    // chooseAndSetRequest(): user selects the request they want to make; 1 returned
-    // if successful, otherwise 0 and error is logged
-    public int chooseAndSetRequest(User user, int requestID) {
-        try {
-            user.requestType = requestID;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
