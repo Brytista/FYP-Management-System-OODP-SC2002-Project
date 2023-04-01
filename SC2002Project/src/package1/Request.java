@@ -6,7 +6,7 @@ public abstract class Request {
     protected boolean isReviewed; // the status of the request
     protected Project project; // the project the request is about
     protected RequestStatus status; // the status of the request
-    public void Request(User sender, Supervisor recipient, Project project) {
+    public Request(User sender, Supervisor recipient, Project project) {
         this.sender = sender;
         this.recipient = recipient;
         this.isReviewed = false; // default value
@@ -24,7 +24,7 @@ public abstract class Request {
         System.out.println("Status:"+ status);
     }
     public int changeProject(Project project) {
-        if(project.isProject()){
+        if(Project.isProject(project)){
             this.project = project;
             return 1; // success
         }
