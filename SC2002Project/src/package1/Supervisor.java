@@ -183,7 +183,7 @@ public class Supervisor extends User{
         studentManaged.add(student);
         return 1;
     }
-
+    @override
     public boolean isSupervisor(){
         return true;
     }
