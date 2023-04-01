@@ -26,6 +26,19 @@ public abstract class SupervisorRequest extends Request {
         return 1; // success
     }
 
+    public int create(Supervisor sender, FYPCoordinator recipient, Project project, Supervisor replacementSupervisor){
+        if(sender == null || recipient == null || project == null || replacementSupervisor == null){
+            return 0;
+        }
+        this.sender = sender;
+        this.recipient = recipient;
+        this.project = project;
+        this.replacementSupervisor = replacementSupervisor;
+        this.isReviewed = false;
+        this.status = RequestStatus.PENDING;
+        return 1;
+    }
+
     @Override
     public int changeRecipient(FYPCoordinator recipient){
         //Make a check to see if the user is a supervisor
@@ -35,6 +48,7 @@ public abstract class SupervisorRequest extends Request {
         this.recipient = recipient;
         return 1; // success
     }
+
     public int changeSender(User sender){
         if (!(sender.isSupervisor())) {
             return 0; // failure, not an instance of Sender or its subclasses

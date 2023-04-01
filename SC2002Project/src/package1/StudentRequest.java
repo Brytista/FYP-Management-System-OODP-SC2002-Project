@@ -11,10 +11,21 @@ public abstract class StudentRequest extends Request {
         recipient.addPendingRequest(this);
         return 1; // success
     }
+    public int create(Student sender, Supervisor recipient, Project project){
+        if(sender == null || recipient == null || project == null){
+            return 0;
+        }
+        this.sender = sender;
+        this.recipient = recipient;
+        this.project = project;
+        this.isReviewed = false;
+        this.status = RequestStatus.PENDING;
+        return 1;
+    }
 
     @Override
-    public int changeSender(User sender){
-        if (sender.isStudent()) {
+    public int changeSender(Student sender){
+        if (!(sender.isStudent())) {
             return 0; // failure, not an instance of Sender or its subclasses
         }
         this.sender = sender;
