@@ -183,7 +183,7 @@ public class Supervisor extends User{
         studentManaged.add(student);
         return 1;
     }
-
+    @Override
     public boolean isSupervisor(){
         return true;
     }
@@ -193,5 +193,15 @@ public class Supervisor extends User{
         numberOfProjectManaged--;
         studentManaged.remove(student);
         return 1;
-    } 
+    }
+    
+    public int removePendingRequest(Request request){
+        for(int i = 0; i < pendingRequest.length();i++){
+            if(request == pendingRequest[i]){
+                pendingRequest.remove(request);
+                return 1;
+            }
+        }
+        return 0;
+    }
 }
