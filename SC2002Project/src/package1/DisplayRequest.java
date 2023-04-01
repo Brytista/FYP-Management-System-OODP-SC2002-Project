@@ -1,6 +1,6 @@
 package package1;
 import java.util.List;
 interface DisplayRequest {
-    void DisplayRequestHistory(List<Request> requestHistory);
-    void DisplayPendingRequest(List<Request> pendingRequest);
+    static void displayRequestHistory(List<Request> requestHistory) {};
+    static void displayPendingRequest(List<Request> pendingRequest) {}
 }

@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class DisplayAll implements DisplayRequest {
     Scanner sc = new Scanner(System.in);
 
-    public void DisplayRequestHistory(List<Request> requestHistory) {
+    public void displayRequestHistory(List<Request> requestHistory) {
         for(Request request : requestHistory) {
             request.displaySender();
             request.displayRecipient();
@@ -16,7 +16,7 @@ public class DisplayAll implements DisplayRequest {
         }
     }
 
-    public void DisplayPendingRequest(List<Request> pendingRequest) {
+    public void displayPendingRequest(List<Request> pendingRequest) {
         for(Request request : pendingRequest) {
             System.out.println("Approve or Reject?");
 

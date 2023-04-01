@@ -4,6 +4,12 @@ public abstract class SupervisorRequest extends Request {
     protected Supervisor sender; // the user who sent the request
     protected FYPCoordinator recipient; // the user who will receive the request
     protected Supervisor replacementSupervisor; // the supervisor who will replace the current supervisor
+    
+    public SupervisorRequest(Supervisor sender, FYPCoordinator recipient, Project project, Supervisor replacementSupervisor) {
+        super(sender, recipient, project);
+        this.replacementSupervisor = replacementSupervisor;
+    }
+    
     public int changeReplacementSupervisor(Supervisor replacementSupervisor) {
         if (replacementSupervisor == null) {
             return 0; // failure, replacementSupervisor is null
@@ -21,7 +27,7 @@ public abstract class SupervisorRequest extends Request {
         if (sender == null || recipient == null) {
             return 0; // failure, sender or recipient is null
         }
-        sender.addRequestHistory(this);
+        sender.addRequestToHistory(this);
         recipient.addPendingRequest(this);
         return 1; // success
     }
@@ -39,7 +45,6 @@ public abstract class SupervisorRequest extends Request {
         return 1;
     }
 
-    @Override
     public int changeRecipient(FYPCoordinator recipient){
         //Make a check to see if the user is a supervisor
         if (recipient == null) {
@@ -49,7 +54,7 @@ public abstract class SupervisorRequest extends Request {
         return 1; // success
     }
 
-    public int changeSender(User sender){
+    public int changeSender(Supervisor sender){
         if (!(sender.isSupervisor())) {
             return 0; // failure, not an instance of Sender or its subclasses
         }

@@ -2,7 +2,10 @@ package package1;
 
 public class RequestChangeProjectTitle extends StudentRequestWithString {
     
-    @Override
+    public RequestChangeProjectTitle(Student sender, Supervisor recipient, Project project, String newProjectTitle) {
+        super(sender, recipient, project, newProjectTitle);
+    }
+
     public int approve() {
             if(this.project == null|| this.newProjectTitle == null|| this.recipient == null||this.sender == null||this.status == null){
                 return 0;
@@ -12,17 +15,17 @@ public class RequestChangeProjectTitle extends StudentRequestWithString {
                 return 0; // failure, project title is not changed
             }
             recipient.removePendingRequest(this);
-            recipient.addRequestHistory(this);
+            recipient.addRequestToHistory(this);
             this.changeStatus(RequestStatus.APPROVED);
             return 1; // success
     }
-    @Override
+
     public int reject() {
         if(this.project == null|| this.newProjectTitle == null|| this.recipient == null||this.sender == null||this.status == null){
             return 0;
         }
         recipient.removePendingRequest(this);
-        recipient.addRequestHistory(this);
+        recipient.addRequestToHistory(this);
         this.changeStatus(RequestStatus.REJECTED);
         return 1; // success
     }
@@ -32,7 +35,7 @@ public class RequestChangeProjectTitle extends StudentRequestWithString {
         if (sender == null || recipient == null) {
             return 0; // failure, sender or recipient is null
         }
-        sender.addRequestHistory(this);
+        sender.addRequestToHistory(this);
         recipient.addPendingRequest(this);
         this.changeStatus(RequestStatus.PENDING); // change the status of the request to pending
         return 1; // success

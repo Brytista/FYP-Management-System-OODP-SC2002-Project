@@ -162,10 +162,7 @@ abstract class User {
 
     // displayRequestHistory(): displays the user's request history
     public void displayRequestHistory() {
-        for (Request request : requestHistory) {
-            System.out.println(
-                    request.getRequestID() + " | " + request.getRequestType() + " | " + request.getRequestStatus());
-        }
+        DisplayRequest.displayRequestHistory(requestHistory);
     }
 
     public boolean isStudent() {
