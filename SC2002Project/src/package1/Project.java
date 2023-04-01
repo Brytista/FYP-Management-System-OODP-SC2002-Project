@@ -2,7 +2,7 @@ package package1;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Project {
+public class Project implements ChangeProjectTitle {
     int projectID;
     Supervisor supervisor;
     String projectTitle;
@@ -22,40 +22,50 @@ public class Project {
         return this.projectID;
     }
 
-    public void setProjectID(int projectID) {
+    public int changeProjectID(int projectID) {
+        if(projectID<0) return 0;
         this.projectID = projectID;
+        return 1;
     }
 
     public Supervisor getSupervisor() {
         return this.supervisor;
     }
 
-    public void changeSupervisor(Supervisor supervisor) {
+    public int changeSupervisor(Supervisor supervisor) {
+        if(supervisor==null) return 0;
         this.supervisor = supervisor;
+        return 1;
     }
 
-    public String changeProjectTitle() {
+    public String getProjectTitle() {
         return this.projectTitle;
     }
 
-    public void setProjectTitle(String projectTitle) {
+    public int changeProjectTitle(String projectTitle) {
+        if(projectTitle==null || projectTitle.length()==0) return 0;
         this.projectTitle = projectTitle;
+        return 1;
     }
 
     public Status getProjectStatus() {
         return this.projectStatus;
     }
 
-    public void changeProjectStatus(Status projectStatus) {
+    public int changeProjectStatus(Status projectStatus) {
+        if(projectStatus==null) return 0;
         this.projectStatus = projectStatus;
+        return 1;
     }
 
     public Student getStudent() {
         return this.student;
     }
 
-    public void changeStudent(Student student) {
+    public int changeStudent(Student student) {
+        if(student==null) return 0;
         this.student = student;
+        return 1;
     }
     
     public void displayProject() {
