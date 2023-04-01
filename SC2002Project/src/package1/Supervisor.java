@@ -2,32 +2,34 @@ package package1;
 import java.util.*;
 import java.util.ArrayList;
 
-public class Supervisor extends User{
+public class Supervisor extends User {
     int numberOfProjectManaged = 0;
-    Project[] projectList;
-    Request[] pendingRequest;
+    List<Project> projectList;
+    List<Request> pendingRequest;
     SupervisorRequest requestType;
-    static Supervisor[] allSupervisor;
-    Student[] studentManaged;
+    static List<Supervisor> allSupervisor;
+    List<Student> studentManaged;
     Scanner sc = new Scanner(System.in);
 
+    public Supervisor(String userID, String password, String name, String email){
+        super(userID, password, name, email);
+    }
+
     public int createProject(Supervisor supervisor, String projectTitle){
-        
-        System.out.println("Enter project title: ");
-        String projectName = sc.nextLine();
         Project newProject = new Project(this, projectTitle);
         projectList.add(newProject);
+        if(Project.addToProjectList(newProject) == 0) return 0;
+        return 1;
     }
 
     public void displayProjects(){
-        for (int i = 0; i < projectList.length(); i++){
-            projectList[i].displayProjects();
+        for (Project project: projectList){
+            project.displayProject();
         }
     }
 
     public int modifyProjectTitle(int projectID, String newTitle){
-        Project project = new Project;
-        project = project.getProject(projectID);
+        Project project = Project.getProjectByID(projectID);
         if(doesProjectBelongToSupervisor(project)){
             project.changeProjectTitle(newTitle);
             return 1;
@@ -43,11 +45,10 @@ public class Supervisor extends User{
     }
 
     public void viewAllPendingRequest(){
-        if(pendingRequest.length() == 0){
+        if(pendingRequest.size() == 0){
             System.out.println("There are no pending Request");
         }
-        DisplayRequest displayRequest = new DisplayAll();
-        displayRequest.displayPendingRequest(pendingRequest);
+        DisplayRequest.displayPendingRequest(pendingRequest);
     }
 
     public int makeRequest(String recipientID, int projectID, String replacementSupervisorID){
@@ -62,59 +63,52 @@ public class Supervisor extends User{
     }
 
     public void displayAllSupervisor(){
-        for (int i = 0; i < allSupervisor.length(); i++){
-            String name = allSupervisor[i].getUserName();
-            String UserID = allSupervisor[i].getUserID();
-            String userEmail = allSupervisor[i].getEmail();
-            System.out.println("Name: " + name + ", UserID: " + userID + "Email: " + userEmail + "\n");
+        for (Supervisor supervisor: allSupervisor){
+            String name = supervisor.getUserName();
+            String UserID = supervisor.getUserID();
+            String userEmail = supervisor.getEmail();
+            System.out.println("Name: " + name + ", UserID: " + UserID + "Email: " + userEmail + "\n");
     }
 
     public int makeAllProjectsAvailable(){
-        return massModifyProjectStatus(userID, AVAILABLE);
+        return massModifyProjectStatus(this.getUserID(), AVAILABLE);
     }
 
-    public int makeAllProjectsuNAvailable(){
-        return massModifyProjectStatus(userID, UNAVAILABLE);
+    public int makeAllProjectsUnavailable(){
+        return massModifyProjectStatus(this.getUserID(), UNAVAILABLE);
     }
 
-    public Student[] getStudentsManaged(){
-        Student[] arr = {};
-        for(int i = 0; i < projectList.length(); i++){
-            if(projectList[i].getStatus == ALLOCATED){
-                arr.add(projectList[i].getStudent())
+    public List<Student> getStudentsManaged(){
+        List<Student> arr;
+        for(Project project: projectList){
+            if(project.getProjectStatus() == ALLOCATED){
+                arr.add(project.getStudent());
             }
         }
         return arr;
     }
 
-    public supervisor(String ID, String Password, String Name, String Email){
-        userID = ID;
-        password = Password;
-        name = Name;
-        emailAddress = Email;
-    }
-
     public static Supervisor getSupervisorByName(String name){
-        for(int i = 0; i < allSupervisor.length();i++){
-            if(allSupervisor[i].getUserName() == name){
-                return allSupervisor[i];
+        for(Supervisor supervisor: allSupervisor){
+            if(supervisor.getUserName() == name){
+                return supervisor;
             }
         }
         return null;
     }
 
     public static Supervisor getSupervisorByID(String UserID){
-        for(int i = 0; i < allSupervisor.length();i++){
-            if(allSupervisor[i].getUserID() == UserID){
-                return allSupervisor[i];
+        for(Supervisor supervisor: allSupervisor){
+            if(supervisor.getUserID() == UserID){
+                return supervisor;
             }
         }
         return null;
     }
 
-    public static int addInitialSupervisor(Supervisor[] supervisorLists){
+    public static int addInitialSupervisor(List<Supervisor> supervisorLists){
         if(supervisorLists == null) return 0;
-        allSupervisor = supervisorLists.clone();
+        allSupervisor = supervisorLists;
         return 1;
     }
 
@@ -126,9 +120,10 @@ public class Supervisor extends User{
 
     public static int removeFromSupervisorList(Supervisor supervisor){
         boolean found = false;
-        for(int i < 0; i < allSupervisor.length();i++){
-            if(allSupervisor[i].equals(supervisor)){
+        for(Supervisor supervisors: allSupervisor){
+            if(supervisor.equals(supervisors)){
                 found = true;
+                break;
             }
         }
         if(!found) return 0;
@@ -137,27 +132,27 @@ public class Supervisor extends User{
     }
 
     private Project selectProject(int ProjectID){
-        for(int i = 0; i < projectList.length();i++){
-            if(projectList[i].getProjectID == ProjectID){
-                return projectList[i];
+        for(Project project: projectList){
+            if(project.getProjectID() == ProjectID){
+                return project;
             }
         }
         return null;
     }
 
     private Supervisor selectSupervior(String replacementSupervisorID){
-        for(int i = 0; i < allSupervisor.length();i++){
-            if(allSupervisor[i].getUserID == replacementSupervisorID){
-                return allSupervisor[i];
+        for(Supervisor supervisors: allSupervisor){
+            if(supervisors.getUserID() == replacementSupervisorID){
+                return supervisors;
             }
         }
         return null;
     }
 
     private FYPCoordinator selectProject(String RecipientID){
-        for(int i = 0; i < allSupervisor.length();i++){
-            if(allSupervisor[i].getProjectID == ProjectID && allSupervisor[i].isFYPCoordinator){
-                return allSupervisor[i];
+        for(Supervisor supervisor: allSupervisor){
+            if(supervisor.getUserID() == RecipientID && supervisor.isFYPCoordinator()){
+                return supervisor;
             }
         }
         return null;
@@ -166,11 +161,12 @@ public class Supervisor extends User{
     public int addPendingRequest(Request request){
         if(request == null) return 0;
         pendingRequest.add(request);
+        return 1;
     }
 
     public boolean doesProjectBelongToSupervisor(Project project){
-        for(int i = 0; i < projectList.length(); i++){
-            if(project.equals(projectList[i])){
+        for(Project projects: projectList){
+            if(project.equals(projects)){
                 return true;
             }
         }
@@ -196,8 +192,8 @@ public class Supervisor extends User{
     }
     
     public int removePendingRequest(Request request){
-        for(int i = 0; i < pendingRequest.length();i++){
-            if(request == pendingRequest[i]){
+        for(Request requests: pendingRequest){
+            if(request.equals(requests)){
                 pendingRequest.remove(request);
                 return 1;
             }
