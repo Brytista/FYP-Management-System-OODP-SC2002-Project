@@ -26,6 +26,32 @@ public class Student extends User {
         }
     }
 
+    @Override
+    public int chooseAndSetRequest(int requestID) {
+
+        try {
+            switch (requestID) {
+                case 1:
+                    requestType = new RequestProjectAllocation();
+                    break;
+                case 2:
+                    requestType = new RequestChangeProjectTitle();
+                    break;
+                case 3:
+                    requestType = new RequestDeregistration();
+                    break;
+                default:
+                    System.err.println("Error: Invalid request ID");
+                    return 0;
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+
     // makeRequest(): makes a request to a supervisor; 1 returned if successful,
     public int makeRequest(String recipientID, int requestID, int projectID) {
         try {
@@ -106,17 +132,21 @@ public class Student extends User {
         }
     }
 
-    // getStudent(): returns the student with the selected name
-    public Student getStudentByName(String name) {
+    // getStudentByName(): returns the student(s) with the selected name
+    public List<Student> getStudentByName(String name) {
+
+        List<Student> returnStudents = new ArrayList<>();
 
         for (Student student : students) {
             if (student.getUserName() == name) {
-                return student;
+                returnStudents.add(student);
             }
         }
+
+        return returnStudents;
     }
 
-    // getStudent(): returns the student with the selected ID
+    // getStudentByID(): returns the student with the selected ID
     public Student getStudentByID(String userID) {
         for (Student student : students) {
             if (student.getUserID() == userID) {
