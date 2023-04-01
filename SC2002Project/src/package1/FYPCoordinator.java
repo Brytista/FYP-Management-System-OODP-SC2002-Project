@@ -1,62 +1,67 @@
 package package1;
+import java.util.List;
+import java.util.ArrayList;
 
-public class FYPCoordinator extends Student {
+public class FYPCoordinator extends Supervisor {
 
-    private List<FYPCoordinator> coordinators = new ArrayList<>();
+    static private List<FYPCoordinator> coordinators = new ArrayList<>();
+
+    public FYPCoordinator(String userID, String password, String name, String email) {
+        super(userID, password, name, email);
+        coordinators.add(this);
+    }
 
     public void viewAllProjects() {
-        for (Project project : projectList) {
-            System.out.println(project.getProjectID() + " " + project.getProjectTitle());
-        }
+        Project.displayAllProjects();
     }
 
     public void generateProjectReportBySupervisorName(String supervisorName) {
-        for (Project project : projectList) {
-            if (project.supervisor.name == supervisorName)
+        for (Project project : Project.projectList) {
+            if (project.supervisor.getUserName() == supervisorName)
                 project.displayProject();
         }
     }
 
     public void generateProjectReportBySupervisorID(String supervisorID) {
-        for (Project project : projectList) {
-            if (project.supervisor.userID == supervisorID)
+        for (Project project : Project.projectList) {
+            if (project.supervisor.getUserID() == supervisorID)
                 project.displayProject();
         }
     }
 
     public void generateProjectReportByStatus(ProjectStatus status) {
-        for (Project project : projectList) {
-            if (project.projectStatus == status)
+        for (Project project : Project.projectList) {
+            if (project.projectStatus.equals(status))
                 project.displayProject();
         }
     }
 
-    public FYPCoordinator getCoordinatorByName(String coordinatorName) {
+    static public FYPCoordinator getCoordinatorByName(String coordinatorName) {
         for (FYPCoordinator coordinator : coordinators) {
-            if (coordinator.name == coordinatorName)
+            if (coordinator.getUserName().equals(coordinatorName))
                 return coordinator;
         }
         return null;
     }
 
-    public FYPCoordinator getCoordinatorByID(String coordinatorID) {
+    static public FYPCoordinator getCoordinatorByID(String coordinatorID) {
         for (FYPCoordinator coordinator : coordinators) {
-            if (coordinator.userID == coordinatorID)
+            if (coordinator.getUserID().equals(coordinatorID))
                 return coordinator;
         }
+        return null;
     }
 
-    public void displayAllCoordinators() {
+    static public void displayAllCoordinators() {
         for (FYPCoordinator coordinator : coordinators) {
             System.out.println(coordinator.getUserID() + " " + coordinator.getUserName());
         }
     }
 
-    public int addInitialCoordinators(List<FYPCoordinator> coordList) {
-
+    static public int addInitialCoordinators(List<FYPCoordinator> coordList) {
         try {
-            for (Student student : coordList) {
-                coordinators.add(student);
+            for (FYPCoordinator coordinator : coordList) {
+                coordinators.add(coordinator);
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -66,8 +71,7 @@ public class FYPCoordinator extends Student {
         return 1;
     }
 
-    public int addCoordinatorToList(FYPCoordinator coordinator) {
-
+    static public int addCoordinatorToList(FYPCoordinator coordinator) {
         try {
             coordinators.add(coordinator);
         } catch (Exception e) {

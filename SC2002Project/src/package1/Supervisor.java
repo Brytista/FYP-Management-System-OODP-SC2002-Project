@@ -119,7 +119,9 @@ public class Supervisor extends User {
 
     public static int addInitialSupervisor(List<Supervisor> supervisorLists){
         if(supervisorLists == null) return 0;
-        allSupervisor = supervisorLists;
+        for(Supervisor supervisor : supervisorLists) {
+            allSupervisor.add(supervisor);
+        }
         return 1;
     }
 
@@ -164,7 +166,7 @@ public class Supervisor extends User {
     }
 
 
-    private FYPCoordinator selectProject(String RecipientID){
+    private Supervisor selectProject(String RecipientID){
         for(Supervisor supervisor: allSupervisor){
             if(supervisor.getUserID() == RecipientID && supervisor.isFYPCoordinator()){
                 return supervisor;
@@ -235,7 +237,7 @@ public class Supervisor extends User {
                 Project.removeFromProjectList(projects);
                 return 1;
             }
-        return 0;
         }
+        return 0;
     }
 }
