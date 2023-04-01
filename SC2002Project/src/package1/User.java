@@ -12,7 +12,6 @@ abstract class User {
     private String email;
 
     private List<User> users = new ArrayList<>();
-    private List<String> availableRequests = new ArrayList<>();
     private List<Request> requestHistory = new ArrayList<>();
 
     // Constructor
@@ -147,26 +146,6 @@ abstract class User {
 
         return 1;
     }
-
-    // displayAvailableRequests(): displays all available requests for the user
-    public void displayAvailableRequests() {
-        for (String request : availableRequests) {
-            System.out.println(request);
-        }
-    }
-
-    // addNewRequest(): adds a new request to the list of available requests;
-    public int addNewRequest(String request) {
-        try {
-            availableRequests.add(request);
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            return 0;
-        }
-
-        return 1;
-    }
-
     // addRequestToHistory(): adds a request to the user's request history;
     // 1 returned if successful, otherwise 0 and error is logged
     public int addRequestToHistory(Request request) {
