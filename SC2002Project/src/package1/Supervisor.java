@@ -192,6 +192,7 @@ public class Supervisor extends User {
         return 1;
     }
 
+    @Override
     public boolean isSupervisor() {
         return true;
     }

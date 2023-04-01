@@ -78,6 +78,7 @@ public class FYPCoordinator extends Student {
         return 1;
     }
 
+    @Override
     public boolean isFYPCoordinator() {
         return true;
     }
