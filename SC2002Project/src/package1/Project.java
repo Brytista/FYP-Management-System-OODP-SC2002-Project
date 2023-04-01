@@ -15,7 +15,6 @@ public class Project implements ChangeProjectTitle {
         this.supervisor = supervisor;
         this.projectTitle = projectTitle;
         this.projectStatus = ProjectStatus.AVAILABLE;
-        projectList.add(this);
     }
 
     public int getProjectID() {
