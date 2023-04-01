@@ -1,5 +1,5 @@
 package package1;
 
-public enum Status {
+public enum ProjectStatus {
     AVAILABLE, RESERVED, UNAVAILABLE, ALLOCATED;
 }
