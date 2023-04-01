@@ -18,10 +18,7 @@ public class Supervisor extends User {
         super(userID, password, name, email);
     }
 
-    public int createProject(Supervisor supervisor, String projectTitle) {
-
-        System.out.println("Enter project title: ");
-        String projectName = sc.nextLine();
+    public int createProject(Supervisor supervisor, String projectTitle){
         Project newProject = new Project(this, projectTitle);
         projectList.add(newProject);
         if(Project.addToProjectList(newProject) == 0) return 0;
