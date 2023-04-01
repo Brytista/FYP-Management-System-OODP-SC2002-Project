@@ -1,15 +1,18 @@
 package package1;
 
 import java.time.Period;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Student extends User {
 
     private StudentRequest requestType;
+    private StudentRequestWithString requestTypeWithString;
     private Project project;
 
     private static List<Student> students = new ArrayList<>();
+    private static List<String> availableRequests = new ArrayList<>(Arrays.asList("Project Allocation", "Change Project Title","Deregistration"));
 
     // Constructor
     public Student(String userID, String password, String name, String email) {
@@ -24,6 +27,13 @@ public class Student extends User {
         }
     }
 
+    // displayAvailableRequests(): displays all available requests
+    public static void displayAvailableRequests() {
+        for (int i = 0; i < availableRequests.size(); i++) {
+            System.out.println("Choose " + (i+1) + ": " + availableRequests.get(i));
+        }
+    }
+
     @Override
     public int chooseAndSetRequest(int requestID) {
 
@@ -31,12 +41,15 @@ public class Student extends User {
             switch (requestID) {
                 case 1:
                     this.requestType = new RequestProjectAllocation();
+                    this.requestTypeWithString = null;
                     break;
                 case 2:
-                    this.requestType = new RequestChangeProjectTitle();
+                    this.requestType = null;
+                    this.requestTypeWithString = new RequestChangeProjectTitle();
                     break;
                 case 3:
                     this.requestType = new RequestDeregistration();
+                    this.requestTypeWithString = null;
                     break;
                 default:
                     System.err.println("Error: Invalid request ID");
