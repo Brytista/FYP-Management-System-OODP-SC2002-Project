@@ -196,7 +196,6 @@ public class Supervisor extends User {
         return 1;
     }
 
-
     private Project selectProject(int ProjectID){
         for(Project project: projectList){
             if(project.getProjectID() == ProjectID){
@@ -205,17 +204,6 @@ public class Supervisor extends User {
         }
         return null;
     }
-
-
-    private Supervisor selectSupervior(String replacementSupervisorID){
-        for(Supervisor supervisors: allSupervisor){
-            if(supervisors.getUserID() == replacementSupervisorID){
-                return supervisors;
-            }
-        }
-        return null;
-    }
-
 
     private Supervisor selectProject(String RecipientID){
         for(Supervisor supervisor: allSupervisor){
