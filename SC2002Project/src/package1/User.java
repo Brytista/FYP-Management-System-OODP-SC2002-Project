@@ -146,6 +146,7 @@ abstract class User {
 
         return 1;
     }
+
     // addRequestToHistory(): adds a request to the user's request history;
     // 1 returned if successful, otherwise 0 and error is logged
     public int addRequestToHistory(Request request) {
