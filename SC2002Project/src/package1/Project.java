@@ -78,7 +78,7 @@ public class Project implements ChangeProjectTitle {
         System.out.format("Supervisor Email: %s\n", this.supervisor.getEmail());
         System.out.format("Project Title: %s\n", this.projectTitle);
         System.out.format("Project Status: %s\n", this.projectStatus);
-        if(this.projectStatus==ProjectStatus.ALLOCATED) {
+        if(this.projectStatus.equals(ProjectStatus.ALLOCATED)) {
             System.out.format("Student Name: %s\n", this.student.getUserName());
             System.out.format("Student Email: %s\n", this.student.getEmail());
         }
@@ -92,7 +92,7 @@ public class Project implements ChangeProjectTitle {
 
     public static void displayAvailableProjects() {
         for (Project project : projectList) {
-            if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
+            if (project.getProjectStatus().equals(ProjectStatus.AVAILABLE)) {
                 project.displayProject();
             }
         }
@@ -110,7 +110,7 @@ public class Project implements ChangeProjectTitle {
     public static List<Project> getProjectByStatus(ProjectStatus projectStatus) {
         List<Project> returnList = new ArrayList<Project>();
         for (Project project : projectList) {
-            if (project.getProjectStatus() == projectStatus) {
+            if (project.getProjectStatus().equals(projectStatus)) {
                 returnList.add(project);
             }
         }
@@ -120,7 +120,7 @@ public class Project implements ChangeProjectTitle {
     public static List<Project> getProjectBySupervisor(String supervisorID) {
         List<Project> returnList = new ArrayList<Project>();
         for (Project project : projectList) {
-            if (project.getSupervisor().getUserID() == supervisorID) {
+            if (project.getSupervisor().getUserID().equals(supervisorID)) {
                 returnList.add(project);
             }
         }
@@ -145,8 +145,8 @@ public class Project implements ChangeProjectTitle {
 
     public static int massModifyProjectStatus(String supervisorID, ProjectStatus projectStatus) {
         for (Project project : projectList) {
-            if (project.getSupervisor().getUserID() == supervisorID) {
-                if (project.getProjectStatus() != ProjectStatus.ALLOCATED) {
+            if (project.getSupervisor().getUserID().equals(supervisorID)) {
+                if (!project.getProjectStatus().equals(ProjectStatus.ALLOCATED)) {
                     project.changeProjectStatus(projectStatus);
                 }
             }
