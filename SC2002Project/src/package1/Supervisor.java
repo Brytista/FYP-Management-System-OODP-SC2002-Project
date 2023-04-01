@@ -200,4 +200,19 @@ public class Supervisor extends User {
         }
         return 0;
     }
+
+    public int AddProject(Project project){
+        if(project == null) return 0;
+        createProject(project.getSupervisor(), project.getProjectTitle());
+        return 1;
+    }
+
+    public int removeProject(Project project){
+        for(Project projects: projectList){
+            if(project.equals(projects)){
+                projectList.remove(projects);
+                return 1;
+        }
+        return 0;
+    }
 }
