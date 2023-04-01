@@ -14,7 +14,7 @@ public class Student extends User {
 
     private static List<Student> students = new ArrayList<>();
     private static List<String> availableRequests = new ArrayList<>(
-            Arrays.asList("Project Allocation", "Change Project Title", "Deregistration"));
+            Arrays.asList("1. Project Allocation", "2. Change Project Title", "3. Deregistration"));
 
     Scanner scanner = new Scanner(System.in);
 
@@ -32,10 +32,16 @@ public class Student extends User {
     }
 
     // displayAvailableRequests(): displays all available requests
-    public static void displayAvailableRequests() {
-        for (int i = 0; i < availableRequests.size(); i++) {
-            System.out.println("Choose " + (i + 1) + ": " + availableRequests.get(i));
+   public static void displayAvailableRequests() {
+        for (String request : availableRequests) {
+            System.out.println(request);
         }
+    }
+
+    public static int addAvailableRequest(String request) {
+        if(availableRequests.contains(request)||request==null) return 0;
+        availableRequests.add(request);
+        return 1;
     }
 
     // chooseAndSetRequest(): sets the request type based on user selection
