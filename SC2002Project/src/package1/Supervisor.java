@@ -1,7 +1,8 @@
 package package1;
 
-import java.util.*;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Supervisor extends User {
     int numberOfProjectManaged = 0;
@@ -237,7 +238,8 @@ public class Supervisor extends User {
                 projectList.remove(projects);
                 Project.removeFromProjectList(projects);
                 return 1;
-        }
+            }
         return 0;
+        }
     }
 }
