@@ -28,7 +28,6 @@ public class Supervisor extends User {
         return 1;
     }
 
-
     public void displayProjects(){
         for (Project project: projectList){
             project.displayProject();
