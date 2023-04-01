@@ -34,10 +34,10 @@ public abstract class Request {
         System.out.println("Project:"+ project);
     }
     public void printRequest() {
-        System.out.println("Request from " + sender.getUserID() + " to " + recipient.getUserID() + " with status " + this.isReviewed());
+        System.out.println("Request from " + sender.getUserID() + " to " + recipient.getUserID() + " with status " + this.isReviewed);
     }
-    public int approve(){} //by Concrete Class
-    public int reject(){} // by Concrete Class
+    public int approve(){return 0;} //by Concrete Class
+    public int reject(){return 0;} // by Concrete Class
     
     public void displayIsReviewed(){
         System.out.println("IsReviewed:"+ isReviewed);
@@ -75,10 +75,11 @@ public abstract class Request {
         if (sender == null || recipient == null) {
             return 0; // failure, sender or recipient is null
         }
-        sender.addRequestHistory(this);
+        sender.addRequestToHistory(this);
         recipient.addPendingRequest(this);
 
         return 1; // success
     }
 
+    public void displayRequestDescription(){}
 }

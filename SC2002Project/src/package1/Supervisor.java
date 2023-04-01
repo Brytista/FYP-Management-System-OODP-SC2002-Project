@@ -3,12 +3,14 @@ package package1;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class Supervisor extends User {
     int numberOfProjectManaged = 0;
     List<Project> projectList;
     List<Request> pendingRequest;
-    SupervisorRequest requestType;
+    private static List<String> availableRequests = new ArrayList<>(Arrays.asList("1. Change Supervisor")); 
+    private SupervisorRequest requestType;
     static List<Supervisor> allSupervisor;
     List<Student> studentManaged;
     Scanner sc = new Scanner(System.in);
@@ -31,6 +33,29 @@ public class Supervisor extends User {
         }
     }
 
+    @Override
+    public int chooseAndSetRequest(int requestID) {
+
+        try {
+
+            switch (requestID) {
+                case 1:
+                    this.requestType = new RequestChangeSupervisor(null,null,null,null);
+                    break;
+                
+                default:
+                    System.out.println("Error: Invalid request ID");
+                    return 0;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: Invalid request ID");
+            return 0;
+        }
+
+        return 1;
+    }
+
     public int modifyProjectTitle(int projectID, String newTitle){
         Project project = Project.getProjectByID(projectID);
         if(doesProjectBelongToSupervisor(project)){
@@ -47,6 +72,17 @@ public class Supervisor extends User {
             return false;
     }
 
+    public static void displayAvailableRequests() {
+        for (String request : availableRequests) {
+            System.out.println(request);
+        }
+    }
+
+    public static int addAvailableRequest(String request) {
+        if(availableRequests.contains(request)||request==null) return 0;
+        availableRequests.add(request);
+        return 1;
+    }
 
     public void viewAllPendingRequest(){
         if(pendingRequest.size() == 0){
@@ -57,16 +93,30 @@ public class Supervisor extends User {
 
     public int makeRequest(String recipientID, int projectID, String replacementSupervisorID) {
         Project project = selectProject(projectID);
-        if (project == null)
-            return 0;
         Supervisor replacementSupervisor = selectSupervisor(replacementSupervisorID);
-        if (replacementSupervisorID == null)
-            return 0;
         FYPCoordinator FYPCoor = selectRecipient(recipientID);
-        if (FYPCoor == null)
+        if (project == null||FYPCoor==null||replacementSupervisor==null)
             return 0;
-        Request newRequest = new RequestChangeSupervisor(this, FYPCoor, project, replacementSupervisor);
+        if(requestType!=null){
+            requestType.create(this, FYPCoor, project, replacementSupervisor); // create request
+            if(requestType.sendRequest()==1){
+                return 1; // request sent
+            }
+            else{
+                return 0; // request not sent
+            }
+        }
+        
+
         return 1;
+    }
+
+    public FYPCoordinator selectRecipient(String recipientID){
+        return FYPCoordinator.getCoordinatorByID(recipientID);
+    }
+
+    public Supervisor selectSupervisor(String replacementSupervisorID){
+        return Supervisor.getSupervisorByID(replacementSupervisorID);
     }
 
     public void displayAllSupervisor(){
@@ -76,20 +126,21 @@ public class Supervisor extends User {
             String userEmail = supervisor.getEmail();
             System.out.println("Name: " + name + ", UserID: " + UserID + "Email: " + userEmail + "\n");
     }
+}
 
 
     public int makeAllProjectsAvailable(){
-        return massModifyProjectStatus(this.getUserID(), AVAILABLE);
+        return Project.massModifyProjectStatus(this.getUserID(), ProjectStatus.AVAILABLE);
     }
 
     public int makeAllProjectsUnavailable(){
-        return massModifyProjectStatus(this.getUserID(), UNAVAILABLE);
+        return Project.massModifyProjectStatus(this.getUserID(), ProjectStatus.UNAVAILABLE);
     }
 
     public List<Student> getStudentsManaged(){
-        List<Student> arr;
+        List<Student> arr = new ArrayList<>();
         for(Project project: projectList){
-            if(project.getProjectStatus() == ALLOCATED){
+            if(project.getProjectStatus() == ProjectStatus.ALLOCATED){
                 arr.add(project.getStudent());
             }
         }
@@ -210,8 +261,8 @@ public class Supervisor extends User {
         if (numberOfProjectManaged == 0)
             return 0;
         numberOfProjectManaged--;
-        studentManaged.remove(student);
-        return 1;
+        if(studentManaged.remove(student)) return 1;
+        else return 0;
     }
    
     public int removePendingRequest(Request request){
@@ -240,4 +291,5 @@ public class Supervisor extends User {
         }
         return 0;
     }
+
 }

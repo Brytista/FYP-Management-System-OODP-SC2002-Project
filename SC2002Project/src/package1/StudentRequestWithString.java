@@ -1,8 +1,18 @@
 package package1;
 
-public abstract class StudentRequestWithString {
+public abstract class StudentRequestWithString extends StudentRequest {
     protected String newProjectTitle; // the new project title
-    
+    Student sender;
+    Supervisor recipient;
+    Project project;
+    RequestStatus status;
+    boolean isReviewed;
+
+    public StudentRequestWithString(Student sender, Supervisor recipient, Project project, String newProjectTitle) {
+        super(sender, recipient, project);
+        this.newProjectTitle = newProjectTitle;
+    }
+
     public int create(Student sender, Supervisor recipient, Project project, String newProjectTitle){
         if(sender == null || recipient == null || project == null|| newProjectTitle == null){
             return 0;

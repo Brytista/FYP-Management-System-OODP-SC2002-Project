@@ -51,15 +51,15 @@ public class Student extends User {
         try {
             switch (requestID) {
                 case 1:
-                    this.requestType = new RequestProjectAllocation();
+                    this.requestType = new RequestProjectAllocation(null, null, null);
                     this.requestTypeWithString = null;
                     break;
                 case 2:
                     this.requestType = null;
-                    this.requestTypeWithString = new RequestChangeProjectTitle();
+                    this.requestTypeWithString = new RequestChangeProjectTitle(null, null, null, null);
                     break;
                 case 3:
-                    this.requestType = new RequestDeregistration();
+                    this.requestType = new RequestDeregistration(null, null, null);
                     this.requestTypeWithString = null;
                     break;
                 default:
@@ -119,15 +119,10 @@ public class Student extends User {
                 return 0;
             }
 
-            StudentRequest request = new StudentRequest(this, recipient, project);
-            request.sendRequest();
-
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-
-        return 1;
     }
 
     // selectProject(): returns the project with the selected ID
