@@ -21,7 +21,7 @@ public class Supervisor extends User {
         if(Project.addToProjectList(newProject) == 0) return 0;
         return 1;
     }
-
+//
     public void displayProjects(){
         for (Project project: projectList){
             project.displayProject();
