@@ -67,6 +67,11 @@ public class Project implements ChangeProjectTitle {
         this.student = student;
         return 1;
     }
+
+    public int removeStudent() {
+        this.student = null;
+        return 1;
+    }
     
     public void displayProject() {
         System.out.format("Project ID: %d\n", this.projectID);
