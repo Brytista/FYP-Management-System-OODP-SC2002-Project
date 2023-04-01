@@ -107,35 +107,26 @@ public class Student extends User {
     }
 
     // getStudent(): returns the student with the selected name
-    public Student getStudent(String name) {
-
-        Student returnStudent;
+    public Student getStudentByName(String name) {
 
         for (Student student : students) {
             if (student.getUserName() == name) {
-                returnStudent = student;
+                return student;
             }
         }
-
-        return returnStudent;
     }
 
     // getStudent(): returns the student with the selected ID
-    public Student getStudent(String userID) {
-
-        Student returnStudent;
-
+    public Student getStudentByID(String userID) {
         for (Student student : students) {
             if (student.getUserID() == userID) {
-                returnStudent = student;
+                return student;
             }
         }
-
-        return returnStudent;
     }
 
     // addInitialStudents(): adds a list of students to the students List object
-    public int addInitialStudents(List studentsList) {
+    public int addInitialStudents(List<Student> studentsList) {
 
         try {
             for (Student student : studentsList) {
