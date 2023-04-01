@@ -6,7 +6,7 @@ public class Project implements ChangeProjectTitle {
     int projectID;
     Supervisor supervisor;
     String projectTitle;
-    Status projectStatus;
+    ProjectStatus projectStatus;
     Student student;
     static List<Project> projectList = new ArrayList<Project>();
 
@@ -14,7 +14,7 @@ public class Project implements ChangeProjectTitle {
         this.projectID = IndexGenerator.getIndex();
         this.supervisor = supervisor;
         this.projectTitle = projectTitle;
-        this.projectStatus = Status.AVAILABLE;
+        this.projectStatus = ProjectStatus.AVAILABLE;
         projectList.add(this);
     }
 
@@ -48,11 +48,11 @@ public class Project implements ChangeProjectTitle {
         return 1;
     }
 
-    public Status getProjectStatus() {
+    public ProjectStatus getProjectStatus() {
         return this.projectStatus;
     }
 
-    public int changeProjectStatus(Status projectStatus) {
+    public int changeProjectStatus(ProjectStatus projectStatus) {
         if(projectStatus==null) return 0;
         this.projectStatus = projectStatus;
         return 1;
@@ -71,12 +71,12 @@ public class Project implements ChangeProjectTitle {
     public void displayProject() {
         System.out.format("Project ID: %d\n", this.projectID);
         System.out.format("Supervisor Name: %s\n", this.supervisor.getUserName());
-        System.out.format("Supervisor Email: %s\n", this.supervisor.getUserEmail());
+        System.out.format("Supervisor Email: %s\n", this.supervisor.getEmail());
         System.out.format("Project Title: %s\n", this.projectTitle);
         System.out.format("Project Status: %s\n", this.projectStatus);
-        if(this.projectStatus==Status.ALLOCATED) {
+        if(this.projectStatus==ProjectStatus.ALLOCATED) {
             System.out.format("Student Name: %s\n", this.student.getUserName());
-            System.out.format("Student Email: %s\n", this.student.getUserEmail());
+            System.out.format("Student Email: %s\n", this.student.getEmail());
         }
     } 
 
@@ -88,7 +88,7 @@ public class Project implements ChangeProjectTitle {
 
     public static void displayAvailableProjects() {
         for (Project project : projectList) {
-            if (project.getProjectStatus() == Status.AVAILABLE) {
+            if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
                 project.displayProject();
             }
         }
@@ -104,7 +104,7 @@ public class Project implements ChangeProjectTitle {
         return returnList;
     }
 
-    public static List<Project> getProjectByStatus(Status projectStatus) {
+    public static List<Project> getProjectByStatus(ProjectStatus projectStatus) {
         List<Project> returnList = new ArrayList<Project>();
         for (Project project : projectList) {
             if (project.getProjectStatus() == projectStatus) {
@@ -140,10 +140,10 @@ public class Project implements ChangeProjectTitle {
         else return 0;
     }
 
-    public static int massModifyProjectStatus(int supervisorID, Status projectStatus) {
+    public static int massModifyProjectStatus(int supervisorID, ProjectStatus projectStatus) {
         for (Project project : projectList) {
             if (project.getSupervisor().getUserID() == supervisorID) {
-                if (project.getProjectStatus() != Status.ALLOCATED) {
+                if (project.getProjectStatus() != ProjectStatus.ALLOCATED) {
                     project.changeProjectStatus(projectStatus);
                 }
             }
