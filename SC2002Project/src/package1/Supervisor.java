@@ -1,11 +1,12 @@
 package package1;
-import java.util.*;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Supervisor extends User{
     int numberOfProjectManaged = 0;
-    Project[] projectList;
-    Request[] pendingRequest;
+    List<Project> projectList;
+    List<Request> pendingRequest;
     SupervisorRequest requestType;
     static Supervisor[] allSupervisor;
     Student[] studentManaged;
@@ -20,14 +21,13 @@ public class Supervisor extends User{
     }
 
     public void displayProjects(){
-        for (int i = 0; i < projectList.length(); i++){
-            projectList[i].displayProjects();
+        for (Project project : projectList){
+            project.displayProject();
         }
     }
 
     public int modifyProjectTitle(int projectID, String newTitle){
-        Project project = new Project;
-        project = project.getProject(projectID);
+        Project project = Project.getProjectByID(projectID);
         if(doesProjectBelongToSupervisor(project)){
             project.changeProjectTitle(newTitle);
             return 1;
