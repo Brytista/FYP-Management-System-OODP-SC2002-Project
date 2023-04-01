@@ -17,14 +17,14 @@ public class FYPCoordinator extends Supervisor {
 
     public void generateProjectReportBySupervisorName(String supervisorName) {
         for (Project project : Project.projectList) {
-            if (project.supervisor.getUserName() == supervisorName)
+            if (project.supervisor.getUserName().equals(supervisorName))
                 project.displayProject();
         }
     }
 
     public void generateProjectReportBySupervisorID(String supervisorID) {
         for (Project project : Project.projectList) {
-            if (project.supervisor.getUserID() == supervisorID)
+            if (project.supervisor.getUserID().equals(supervisorID))
                 project.displayProject();
         }
     }

@@ -99,7 +99,7 @@ public class Supervisor extends User {
 
     public static Supervisor getSupervisorByName(String name){
         for(Supervisor supervisor: allSupervisor){
-            if(supervisor.getUserName() == name){
+            if(supervisor.getUserName().equals(name)){
                 return supervisor;
             }
         }
