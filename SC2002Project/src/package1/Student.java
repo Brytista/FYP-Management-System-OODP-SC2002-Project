@@ -32,14 +32,15 @@ public class Student extends User {
     }
 
     // displayAvailableRequests(): displays all available requests
-   public static void displayAvailableRequests() {
+    public static void displayAvailableRequests() {
         for (String request : availableRequests) {
             System.out.println(request);
         }
     }
 
     public static int addAvailableRequest(String request) {
-        if(availableRequests.contains(request)||request==null) return 0;
+        if (availableRequests.contains(request) || request == null)
+            return 0;
         availableRequests.add(request);
         return 1;
     }
@@ -118,9 +119,6 @@ public class Student extends User {
                 System.err.println("Error: No request type selected");
                 return 0;
             }
-
-            StudentRequest request = new StudentRequest(this, recipient, project);
-            request.sendRequest();
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
