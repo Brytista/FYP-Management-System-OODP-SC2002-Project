@@ -225,7 +225,7 @@ public class Supervisor extends User {
         return 0;
     }
 
-    public int AddProject(Project project){
+    public int addProject(Project project){
         if(project == null) return 0;
         createProject(project.getSupervisor(), project.getProjectTitle());
         return 1;
@@ -235,6 +235,7 @@ public class Supervisor extends User {
         for(Project projects: projectList){
             if(project.equals(projects)){
                 projectList.remove(projects);
+                Project.removeFromProjectList(projects);
                 return 1;
         }
         return 0;
