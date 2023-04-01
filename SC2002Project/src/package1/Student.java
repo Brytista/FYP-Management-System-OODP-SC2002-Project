@@ -1,6 +1,5 @@
 package package1;
 
-import java.time.Period;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
