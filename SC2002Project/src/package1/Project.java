@@ -125,27 +125,19 @@ public class Project implements ChangeProjectTitle {
     }
 
     public static int addInitialProjects(List<Project> initialProjectList) {
-        if(initialProjectList.isEmpty()) {
-            return 0;
-        }
+        if(initialProjectList.isEmpty()) return 0;
         projectList.addAll(initialProjectList);
         return 1;
     }
 
     public static int addToProjectList(Project project) {
-        if(project==null) {
-            return 0;
-        }
-        projectList.add(project);
-        return 1;
+        if(projectList.add(project)) return 1;
+        else return 0;
     }
     
     public static int removeFromProjectList(Project project) {
-        if(project==null) {
-            return 0;
-        }
-        projectList.remove(project);
-        return 1;
+        if(projectList.remove(project)) return 1;
+        else return 0;
     }
 
     public static int massModifyProjectStatus(int supervisorID, Status projectStatus) {
