@@ -7,23 +7,47 @@ import java.util.List;
 public class Student extends User {
 
     private StudentRequest requestType;
-    private boolean projectAssigned = false;
+    private Project project;
 
     private static List<Student> students = new ArrayList<>();
-    private static List<Supervisor> supervisors = new ArrayList<>();
-    private List<Project> projects = new ArrayList<>();
 
     // Constructor
-    public Student(String userID, String password, String firstName, String lastName, String email) {
-        super(userID, password, firstName, lastName, email);
+    public Student(String userID, String password, String name, String email) {
+        super(userID, password, name, email);
         students.add(this);
     }
 
     // displayProjects(): displays all projects
     public void displayProjects() {
-        for (Project project : projects) {
+        if (this.isProjectAssigned()) {
             System.out.println(project.getProjectID() + " " + project.getProjectTitle());
         }
+    }
+
+    @Override
+    public int chooseAndSetRequest(int requestID) {
+
+        try {
+            switch (requestID) {
+                case 1:
+                    this.requestType = new RequestProjectAllocation();
+                    break;
+                case 2:
+                    this.requestType = new RequestChangeProjectTitle();
+                    break;
+                case 3:
+                    this.requestType = new RequestDeregistration();
+                    break;
+                default:
+                    System.err.println("Error: Invalid request ID");
+                    return 0;
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
     }
 
     // makeRequest(): makes a request to a supervisor; 1 returned if successful,
@@ -44,56 +68,44 @@ public class Student extends User {
 
     // selectProject(): returns the project with the selected ID
     private Project selectProject(int projectID) {
-        Project returnProject;
-
-        for (Project project : projects) {
-            if (project.getProjectID() == projectID) {
-                returnProject = project;
-            }
-        }
-
-        return returnProject;
+        return Project.getProjectByID(projectID);
     }
 
     // selectRecipient(): returns the supervisor with the selected ID
     private Supervisor selectRecipient(String supervisorID) {
-        Supervisor returnSupervisor;
-
-        for (Supervisor recipient : supervisors) {
-            if (recipient.getUserID() == supervisorID) {
-                returnSupervisor = recipient;
-            }
-        }
-
-        return returnSupervisor;
+        return Supervisor.getSupervisorByID(supervisorID);
     }
 
     // viewAllProjects(): displays all available projects
     public void viewAllProjects() {
-        for (Project project : projects) {
-            System.out.println(project.getProjectID() + " " + project.getProjectTitle());
-        }
+        Project.displayAllProjects();
     }
 
-    // hasAssignedProject(): returns true if the student has an assigned project
-    public boolean hasAssignedProject() {
-        return projectAssigned;
+    // isProjectAssigned(): returns true if the student has an assigned project
+    public boolean isProjectAssigned() {
+        return this.project != null;
     }
 
     // changeProject(): changes the student's project; 1 returned if successful
     public int changeProject(Project newProject) {
 
-        if (projectAssigned == false) {
+        if (!this.isProjectAssigned()) {
             System.err.println("Error: Student has no assigned project");
             return 0;
         } else {
-            try {
-                projects[0] = newProject;
+            project = newProject;
+        }
 
-            } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
-                return 0;
-            }
+        return 1;
+    }
+
+    // removeProject(): removes the student's project
+    public int removeProject() {
+        try {
+            this.project = null;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
         }
 
         return 1;
@@ -106,23 +118,31 @@ public class Student extends User {
         }
     }
 
-    // getStudent(): returns the student with the selected name
-    public Student getStudentByName(String name) {
+    // getStudentByName(): returns the student(s) with the selected name
+    public List<Student> getStudentByName(String name) {
+
+        List<Student> returnStudents = new ArrayList<>();
 
         for (Student student : students) {
             if (student.getUserName() == name) {
-                return student;
+                returnStudents.add(student);
             }
         }
+
+        return returnStudents;
     }
 
-    // getStudent(): returns the student with the selected ID
+    // getStudentByID(): returns the student with the selected ID
     public Student getStudentByID(String userID) {
+        Student returnStudent = null;
+
         for (Student student : students) {
             if (student.getUserID() == userID) {
-                return student;
+                returnStudent = student;
             }
         }
+
+        return returnStudent;
     }
 
     // addInitialStudents(): adds a list of students to the students List object
@@ -167,7 +187,8 @@ public class Student extends User {
     }
 
     // isStudent(): confirms whether the user belongs to a Student class
+    @Override
     public boolean isStudent() {
-
+        return true;
     }
 }
