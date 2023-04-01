@@ -48,7 +48,7 @@ public class Student extends User {
 
         for (Project project : projects) {
             if (project.getProjectID() == projectID) {
-                returnProject = project;
+                return project;
             }
         }
 
@@ -57,15 +57,11 @@ public class Student extends User {
 
     // selectRecipient(): returns the supervisor with the selected ID
     private Supervisor selectRecipient(String supervisorID) {
-        Supervisor returnSupervisor;
-
         for (Supervisor recipient : supervisors) {
             if (recipient.getUserID() == supervisorID) {
-                returnSupervisor = recipient;
+                return recipient;
             }
         }
-
-        return returnSupervisor;
     }
 
     // viewAllProjects(): displays all available projects
