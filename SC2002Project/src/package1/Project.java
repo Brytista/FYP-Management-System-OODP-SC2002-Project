@@ -115,16 +115,25 @@ public class Project {
     }
 
     public static int addInitialProjects(List<Project> initialProjectList) {
+        if(initialProjectList.isEmpty()) {
+            return 0;
+        }
         projectList.addAll(initialProjectList);
         return 1;
     }
 
     public static int addToProjectList(Project project) {
+        if(project==null) {
+            return 0;
+        }
         projectList.add(project);
         return 1;
     }
     
     public static int removeFromProjectList(Project project) {
+        if(project==null) {
+            return 0;
+        }
         projectList.remove(project);
         return 1;
     }
@@ -141,7 +150,7 @@ public class Project {
     }
     
     public boolean isProject(Object obj) {
-        if (obj instanceof Project) {
+        if (obj.getClass().equals(Project.class)) {
             return true;
         } else {
             return false;
