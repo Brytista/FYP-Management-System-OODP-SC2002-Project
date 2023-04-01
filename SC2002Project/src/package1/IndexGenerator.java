@@ -1,8 +1,8 @@
 package package1;
 
 public class IndexGenerator {
-    private static int index = 1;
+    private static int currIndex = 1;
     public static int getIndex() {
-        return index++;
+        return currIndex++;
     }
 }
