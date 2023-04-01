@@ -94,14 +94,13 @@ public class Project implements ChangeProjectTitle {
         }
     }
 
-    public static List<Project> getProjectByID(int projectID) {
-        List<Project> returnList = new ArrayList<Project>();
+    public static Project getProjectByID(int projectID) {
         for (Project project : projectList) {
             if (project.getProjectID() == projectID) {
-                returnList.add(project);
+                return project;
             }
         }
-        return returnList;
+        return null;
     }
 
     public static List<Project> getProjectByStatus(ProjectStatus projectStatus) {
@@ -114,7 +113,7 @@ public class Project implements ChangeProjectTitle {
         return returnList;
     }
 
-    public static List<Project> getProjectBySupervisor(int supervisorID) {
+    public static List<Project> getProjectBySupervisor(String supervisorID) {
         List<Project> returnList = new ArrayList<Project>();
         for (Project project : projectList) {
             if (project.getSupervisor().getUserID() == supervisorID) {
@@ -140,7 +139,7 @@ public class Project implements ChangeProjectTitle {
         else return 0;
     }
 
-    public static int massModifyProjectStatus(int supervisorID, ProjectStatus projectStatus) {
+    public static int massModifyProjectStatus(String supervisorID, ProjectStatus projectStatus) {
         for (Project project : projectList) {
             if (project.getSupervisor().getUserID() == supervisorID) {
                 if (project.getProjectStatus() != ProjectStatus.ALLOCATED) {
