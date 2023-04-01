@@ -12,7 +12,6 @@ abstract class User {
     private String email;
 
     private List<User> users = new ArrayList<>();
-    private List<String> availableRequests = new ArrayList<>();
     private List<Request> requestHistory = new ArrayList<>();
 
     // Constructor
@@ -140,25 +139,6 @@ abstract class User {
     public int changePassword(String password) {
         try {
             this.password = password;
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            return 0;
-        }
-
-        return 1;
-    }
-
-    // displayAvailableRequests(): displays all available requests for the user
-    public void displayAvailableRequests() {
-        for (String request : availableRequests) {
-            System.out.println(request);
-        }
-    }
-
-    // addNewRequest(): adds a new request to the list of available requests;
-    public int addNewRequest(String request) {
-        try {
-            availableRequests.add(request);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
