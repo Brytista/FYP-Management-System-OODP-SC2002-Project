@@ -187,4 +187,16 @@ abstract class User {
                     request.getRequestID() + " | " + request.getRequestType() + " | " + request.getRequestStatus());
         }
     }
+
+    public boolean isStudent() {
+        return false;
+    }
+
+    public boolean isSupervisor() {
+        return false;
+    }
+
+    public boolean isFYPCoordinator() {
+        return false;
+    }
 }
