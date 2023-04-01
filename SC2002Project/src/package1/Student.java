@@ -4,6 +4,7 @@ import java.time.Period;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Student extends User {
 
@@ -12,7 +13,10 @@ public class Student extends User {
     private Project project;
 
     private static List<Student> students = new ArrayList<>();
-    private static List<String> availableRequests = new ArrayList<>(Arrays.asList("Project Allocation", "Change Project Title","Deregistration"));
+    private static List<String> availableRequests = new ArrayList<>(
+            Arrays.asList("Project Allocation", "Change Project Title", "Deregistration"));
+
+    Scanner scanner = new Scanner(System.in);
 
     // Constructor
     public Student(String userID, String password, String name, String email) {
@@ -30,10 +34,11 @@ public class Student extends User {
     // displayAvailableRequests(): displays all available requests
     public static void displayAvailableRequests() {
         for (int i = 0; i < availableRequests.size(); i++) {
-            System.out.println("Choose " + (i+1) + ": " + availableRequests.get(i));
+            System.out.println("Choose " + (i + 1) + ": " + availableRequests.get(i));
         }
     }
 
+    // chooseAndSetRequest(): sets the request type based on user selection
     @Override
     public int chooseAndSetRequest(int requestID) {
 
@@ -63,11 +68,51 @@ public class Student extends User {
         return 1;
     }
 
+    // getNewProjectTitle(): gets the new project title from the user
+    public String getNewProjectTitle() {
+        System.out.println("Enter new project title: ");
+        String newProjectTitle = scanner.nextLine();
+        return newProjectTitle;
+    }
+
     // makeRequest(): makes a request to a supervisor; 1 returned if successful,
     public int makeRequest(String recipientID, int requestID, int projectID) {
+
         try {
             Project project = selectProject(projectID);
             Supervisor recipient = selectRecipient(recipientID);
+
+            if (project == null || recipient == null) {
+                System.err.println("Error: Invalid project or recipient ID");
+                return 0;
+            }
+
+            if (this.requestType != null) {
+
+                this.requestType.create(this, recipient, project);
+                if (this.requestType.sendRequest() == 1) {
+                    return 1;
+                } // request is sent
+                else {
+                    return 0; // request not sent
+                }
+
+            } else if (this.requestTypeWithString != null) {
+
+                String newProjectTitle = getNewProjectTitle();
+                this.requestTypeWithString.create(this, recipient, project, newProjectTitle);
+
+                if (this.requestTypeWithString.sendRequest() == 1) {
+                    return 1; // request is sent
+                } else {
+                    return 0; // request not sent
+                }
+
+            } else {
+                System.err.println("Error: No request type selected");
+                return 0;
+            }
+
             StudentRequest request = new StudentRequest(this, recipient, project);
             request.sendRequest();
 
