@@ -125,8 +125,8 @@ public class Project implements ChangeProjectTitle {
 
     public static int addInitialProjects(List<Project> initialProjectList) {
         if(initialProjectList.isEmpty()) return 0;
-        projectList.addAll(initialProjectList);
-        return 1;
+        if(projectList.addAll(initialProjectList)) return 1;
+        return 0;
     }
 
     public static int addToProjectList(Project project) {
@@ -150,7 +150,7 @@ public class Project implements ChangeProjectTitle {
         return 1;
     }
     
-    public boolean isProject(Object obj) {
+    public static boolean isProject(Object obj) {
         if (obj.getClass().equals(Project.class)) {
             return true;
         } else {
