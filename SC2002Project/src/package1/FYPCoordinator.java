@@ -86,4 +86,28 @@ public class FYPCoordinator extends Supervisor {
     public boolean isFYPCoordinator() {
         return true;
     }
+
+    // login(): returns 1 if login is successful, otherwise 0 and error is logged
+    public static int loginFYPCoordinator (String userID, String password) {
+        try {
+            for (FYPCoordinator fypcoordinator : coordinators) {
+                if (fypcoordinator.getUserID().equals(userID)) {
+                    if (fypcoordinator.getPassword().equals(password)) {
+                        // User exists and password is correct
+                        fypcoordinator.login();
+                        return 1;
+                    } else {
+                        // User exists but password is incorrect
+                        return 0;
+                    }
+                }
+            }
+            // User does not exist
+            return 0;
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+    }
 }

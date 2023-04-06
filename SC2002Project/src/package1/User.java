@@ -11,7 +11,7 @@ abstract class User {
     private boolean loggedIn = false;
     private String email;
 
-    private List<User> users = new ArrayList<>();
+    private static List<User> users = new ArrayList<>();
     private List<Request> requestHistory = new ArrayList<>();
 
     // Constructor
@@ -98,30 +98,6 @@ abstract class User {
         return 1;
     }
 
-    // login(): returns 1 if login is successful, otherwise 0 and error is logged
-    public int login(String userID, String password) {
-        try {
-            for (User user : users) {
-                if (user.getUserID().equals(userID)) {
-                    if (user.getPassword().equals(password)) {
-                        // User exists and password is correct
-                        this.loggedIn = true;
-                        return 1;
-                    } else {
-                        // User exists but password is incorrect
-                        return 0;
-                    }
-                }
-            }
-            // User does not exist
-            return 0;
-
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            return 0;
-        }
-    }
-
     // logout(): returns 1 if logout is successful, otherwise 0 and error is logged
     public int logout() {
         try {
@@ -175,5 +151,15 @@ abstract class User {
 
     public boolean isFYPCoordinator() {
         return false;
+    }
+
+    public boolean isLoggedIn(){
+        return loggedIn;
+    }
+
+    public int logIn(){
+        if(loggedIn) return 0;
+        loggedIn = true;
+        return 1;
     }
 }

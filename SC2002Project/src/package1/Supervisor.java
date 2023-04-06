@@ -20,10 +20,10 @@ public class Supervisor extends User {
         super(userID, password, name, email);
     }
 
-    public int createProject(Supervisor supervisor, String projectTitle){
+    public int createProject(String projectTitle){
         Project newProject = new Project(this, projectTitle);
-        projectList.add(newProject);
         if(Project.addToProjectList(newProject) == 0) return 0;
+        projectList.add(newProject);
         return 1;
     }
 
@@ -205,15 +205,6 @@ public class Supervisor extends User {
         return null;
     }
 
-    private Supervisor selectProject(String RecipientID){
-        for(Supervisor supervisor: allSupervisor){
-            if(supervisor.getUserID() == RecipientID && supervisor.isFYPCoordinator()){
-                return supervisor;
-            }
-        }
-        return null;
-    }
-
     public int addPendingRequest(Request request) {
         if (request == null)
             return 0;
@@ -278,6 +269,30 @@ public class Supervisor extends User {
             }
         }
         return 0;
+    }
+
+    // login(): returns 1 if login is successful, otherwise 0 and error is logged
+    public static int loginSupervisor(String userID, String password) {
+        try {
+            for (Supervisor supervisor : allSupervisor) {
+                if (supervisor.getUserID().equals(userID)) {
+                    if (supervisor.getPassword().equals(password)) {
+                        // User exists and password is correct
+                        supervisor.login();
+                        return 1;
+                    } else {
+                        // User exists but password is incorrect
+                        return 0;
+                    }
+                }
+            }
+            // User does not exist
+            return 0;
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
     }
 
 }
