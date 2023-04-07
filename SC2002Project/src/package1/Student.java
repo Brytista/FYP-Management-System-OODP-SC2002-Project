@@ -28,6 +28,7 @@ public class Student extends User {
         if (this.isProjectAssigned()) {
             System.out.println(project.getProjectID() + " " + project.getProjectTitle());
         }
+        return;
     }
 
     // displayAvailableRequests(): displays all available requests
@@ -137,7 +138,7 @@ public class Student extends User {
 
     // viewAllProjects(): displays all available projects
     public void viewAllProjects() {
-        Project.displayAllProjects();
+        Project.displayAvailableProjects();
     }
 
     // isProjectAssigned(): returns true if the student has an assigned project
@@ -178,7 +179,7 @@ public class Student extends User {
     }
 
     // getStudentByName(): returns the student(s) with the selected name
-    public List<Student> getStudentByName(String name) {
+    public static List<Student> getStudentByName(String name) {
 
         List<Student> returnStudents = new ArrayList<>();
 
@@ -192,7 +193,7 @@ public class Student extends User {
     }
 
     // getStudentByID(): returns the student with the selected ID
-    public Student getStudentByID(String userID) {
+    public static Student getStudentByID(String userID) {
         Student returnStudent = null;
 
         for (Student student : students) {
@@ -220,7 +221,7 @@ public class Student extends User {
     }
 
     // addToStudentsList(): adds a student to the students List object
-    public int addToStudentsList(Student student) {
+    public static int addToStudentsList(Student student) {
 
         try {
             students.add(student);
@@ -249,5 +250,29 @@ public class Student extends User {
     @Override
     public boolean isStudent() {
         return true;
+    }
+
+    // login(): returns 1 if login is successful, otherwise 0 and error is logged
+    public static int loginStudent(String userID, String password) {
+        try {
+            for (Student student : students) {
+                if (student.getUserID().equals(userID)) {
+                    if (student.getPassword().equals(password)) {
+                        // User exists and password is correct
+                        student.login();
+                        return 1;
+                    } else {
+                        // User exists but password is incorrect
+                        return 0;
+                    }
+                }
+            }
+            // User does not exist
+            return 0;
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
     }
 }
