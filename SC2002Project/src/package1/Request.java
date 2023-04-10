@@ -52,34 +52,53 @@ public abstract class Request {
         System.out.println("Sender:"+ sender.getUserID());
     }
     public int changeSender(User sender){
-        if (!(sender instanceof User)) {
-            return 0; // failure, not an instance of Sender or its subclasses
+        try {
+            if (!(sender instanceof User)) {
+                return 0; // failure, not an instance of Sender or its subclasses
+            }
+            this.sender = sender;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
         }
-        this.sender = sender;
         return 1; // success
     }
+    
 
     public void displayRecipient(){
         System.out.println("Recipient:"+ recipient.getUserID());
     }
+    
     public int changeRecipient(Supervisor recipient){
-        //Make a check to see if the user is a supervisor
-        if (recipient == null) {
-            return 0; // failure, recipient is null
+        try {
+            //Make a check to see if the user is a supervisor
+            if (recipient == null) {
+                return 0; // failure, recipient is null
+            }
+            this.recipient = recipient;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
         }
-        this.recipient = recipient;
+    
         return 1; // success
     }
+    
     public int sendRequest(){
-        //Send the request to the recipient
-        if (sender == null || recipient == null) {
-            return 0; // failure, sender or recipient is null
+        try {
+            //Send the request to the recipient
+            if (sender == null || recipient == null) {
+                return 0; // failure, sender or recipient is null
+            }
+            sender.addRequestToHistory(this);
+            recipient.addPendingRequest(this);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
         }
-        sender.addRequestToHistory(this);
-        recipient.addPendingRequest(this);
-
+    
         return 1; // success
-    }
+    } 
 
     public void displayRequestDescription(){}
 }

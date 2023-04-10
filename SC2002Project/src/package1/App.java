@@ -1,11 +1,36 @@
 package package1;
 import java.util.*;
+import package1.Student;
+import package1.Supervisor;
+import package1.FYPCoordinator;
+
 
 public class App {
     public static void main(String[] args) {
         //Put the read file
         Scanner sc = new Scanner(System.in);
         int quit = 0;
+
+        // Add Students
+        Student student1 = new Student("BKIELY001", "password", "Bryan", "BKIELY001@e.ntu.edu.sg"); 
+        Student student2 = new Student("JAMIE69", "password", "Yiji", "JAMIE69@e.ntu.edu.sg"); 
+        Student student3 = new Student("MATOS69", "password", "Matthew", "MATOS69@e.ntu.edu.sg"); 
+        Student student4 = new Student("JOSHAC69", "password", "Joshua", "JOSHAC69@e.ntu.edu.sg"); 
+
+        //add supervisors
+        Supervisor supervisor1 = new Supervisor("JAMES", "password", "James", "JAMES@ntu.edu.sg"); 
+        Supervisor supervisor2 = new Supervisor("LOKE", "password", "Loke Yuan Ren", "LOKE@ntu.edu.sg"); 
+        Supervisor supervisor3 = new Supervisor("NEWTON", "password", "Newton Fernando", "NEWTON@ntu.edu.sg"); 
+
+        //add fyp coordinators
+        FYPCoordinator fypCoordinator1 = new FYPCoordinator("Li Fang", "password", "Li Fang", "ASFLI@ntu.edu.sg"); 
+
+        //add projects
+        Project project1 = new Project(Supervisor.getSupervisorByID("JAMES"), "Project 1"); 
+        Project project2 = new Project(Supervisor.getSupervisorByID("LOKE"), "Project 2");
+        Project project3 = new Project(Supervisor.getSupervisorByID("NEWTON"), "Project 3");
+        Project project4 = new Project(Supervisor.getSupervisorByID("JAMES"), "Project 4");
+
         while(quit == 0){
             if(quit == 1) break;
             System.out.println("1. Exit");
@@ -14,6 +39,9 @@ public class App {
             System.out.print("Enter your choice: ");
             int option1 = sc.nextInt();
             sc.nextLine();
+            Student currentStudent = null; 
+            Supervisor currentSupervisor = null;
+            FYPCoordinator currentFYPCoordinator = null;
             switch(option1){
                 case(1):
                 quit = 1;
@@ -23,42 +51,44 @@ public class App {
                 while(register == 0){
                     System.out.println("Enter your name: ");
                     String newName = sc.nextLine();
-                    System.out.println("Enter your username: ");
+                    System.out.println("Enter your userID: ");
                     String newUsername = sc.nextLine();
                     System.out.println("Enter your password");
                     String newPassword = sc.nextLine();
-                    System.out.println("Enter your role (Student/Supervisor/FYP Coordinator), enter \"quit\" to cancel");
+                    System.out.println("Press 1 to register as a student, 2 to register as a supervisor, 3 to register as a FYPCoordinator, 4 to quit");
                     String newRole = sc.nextLine();
-                    if(newRole == "Student"){
+                    switch(newRole){
+                        case("1"):
                         Student newStudent = new Student(newUsername, newPassword, newName, newUsername + "@e.ntu.edu.sg");
                         Student.addToStudentsList(newStudent);
                         //Add student to the student file
                         register = 1;
-                    }
-                    else if(newRole == "Supervisor"){
+                        break;
+                        case("2"):
                         Supervisor newSupervisor = new Supervisor(newUsername, newPassword, newName, newUsername + "@ntu.edu.sg");
                         Supervisor.addToSupervisorList(newSupervisor);
                         //Add supervisor to the supervisor file
                         register = 1;
-                    }
-                    else if(newRole == "FYP Coordinator"){
+            
+                        break;
+                        case("3"):
                         FYPCoordinator newFYPCoordinator = new FYPCoordinator(newUsername, newPassword, newName, newUsername + "@ntu.edu.sg");
                         FYPCoordinator.addCoordinatorToList(newFYPCoordinator);
                         //Add FYPCoordinator to the FYPCoordinator file
                         register = 1;
-                    }
-                    else if(newRole == "quit"){
+                        break;
+                        case("4"):
                         register = 1;
-                    }
-                    else{
-                        System.out.println("Your role is invalid");
+                        break;
+                        default:
+                        System.out.println("Your role is invalid"); 
                     }
                 }
                 break;
                 case(3):
                 boolean logging = true;
                 while(logging){
-                    System.out.println("Enter your username: ");
+                    System.out.println("Enter your userID: ");
                     String username = sc.nextLine();
                     System.out.println("Enter your password");
                     String password = sc.nextLine();
@@ -70,67 +100,97 @@ public class App {
                     sc.nextLine();
                     switch(type){
                         case(1):
-                        if(Student.loginStudent(username, password) == 1){
-                            Student currentUser = Student.getStudentByID(username);
-                            logging = false;
-                            System.out.println("Welcome, student " + currentUser.getUserName);
-                        }
-                        else{
-                            System.out.println("Your Username, Password and type does not match");
-                        }
-                        break;
+                            int loginResult = Student.loginStudent(username, password);
+                            if(loginResult == 1){
+                                currentStudent = Student.getStudentByID(username);
+                                if (currentStudent != null) {
+                                    currentStudent.login();
+                                    logging = false;
+                                    System.out.println("Welcome, student " + currentStudent.getUserName());
+                                } else {
+                                    System.out.println("Error: Unable to find student with ID " + username);
+                                }
+                            }
+                            else{
+                                System.out.println("Your username, password, and type do not match");
+                            }
+                            break;
                         case(2):
-                        if(Supervisor.loginSupervisor(username, password) == 1){
-                            Supervisor currentUser = Supervisor.getSupervisorByID(username);
-                            logging = false;
-                            System.out.println("Welcome, Supervisor " + currentUser.getUserName);
-                        }
-                        else{
-                            System.out.println("Your Username, Password and type does not match");
-                        }
-                        break;
+                            int supervisorLoginResult = Supervisor.loginSupervisor(username, password);
+                            if(supervisorLoginResult == 1){
+                                currentSupervisor = Supervisor.getSupervisorByID(username);
+                                if (currentSupervisor != null) {
+                                    currentSupervisor.login();
+                                    logging = false;
+                                    System.out.println("Welcome, Supervisor " + currentSupervisor.getUserName());
+                                } else {
+                                    System.out.println("Error: Unable to find supervisor with ID " + username);
+                                }
+                            }
+                            else{
+                                System.out.println("Your username, password, and type do not match");
+                            }
+                            break;
                         case(3):
-                        if(FYPCoordinator.loginFYPCoordinator(username, password) == 1){
-                            FYPCoordinator currentUser = FYPCoordinator.getCoordinatorByID(username);
-                            logging = false;
-                            System.out.println("Welcome, FYP Coordinator " + currentUser.getUserName);
-                        }
-                        else{
-                            System.out.println("Your Username, Password and type does not match");
-                        }
-                        break;
+                            int fypCoordinatorLoginResult = FYPCoordinator.loginFYPCoordinator(username, password);
+                            if(fypCoordinatorLoginResult == 1){
+                                currentFYPCoordinator = FYPCoordinator.getCoordinatorByID(username);
+                                if (currentFYPCoordinator != null) {
+                                    currentFYPCoordinator.login();
+                                    logging = false;
+                                    System.out.println("Welcome, FYP Coordinator " + currentFYPCoordinator.getUserName());
+                                } else {
+                                    System.out.println("Error: Unable to find FYP coordinator with ID " + username);
+                                }
+                            }
+                            else{
+                                System.out.println("Your username, password, and type do not match");
+                            }
+                            break;
                         default:
-                        System.out.println("Please choose an appropriate user type");
-                        break;
+                            System.out.println("Please choose an appropriate user type");
+                            break;
                     }
+                    
+                    
 
-                    while(currentUser.isLoggedIn && currentUser.isStudent){
+                    while(currentStudent.isLoggedIn() && currentStudent!=null){
                         System.out.println("List of Available Actions: ");
                         System.out.println("1. Send Request");
                         System.out.println("2. See all available Projects");
                         System.out.println("3. Change Password");
                         System.out.println("4. Check my Request History");
                         System.out.println("5. Logout");
-                        int option2 = sc.nextInt();
-                        sc.nextLine();
+                        int option2 = 6; 
+                        try {
+                            option2 = sc.nextInt();
+                            sc.nextLine();
+                        } catch (InputMismatchException e) {
+                            System.out.println("Your input is invalid!"); 
+                        }
+                        
                         switch(option2){
                             case(1):
                             System.out.println("Choose a request type: ");
-                            currentUser.displayAvailableRequests();
+                            Student.displayAvailableRequests();
+                            System.out.println("Input 4 to cancel");
                             int requestID = sc.nextInt();
                             sc.nextLine();
-                            while(currentUser.chooseAndSetRequest(requestID)){
+                            if(requestID == 4) break;
+                            while(currentStudent.chooseAndSetRequest(requestID)==0){
                                 System.out.println("Choose a request type: ");
-                                currentUser.displayAvailableRequests();
+                                Student.displayAvailableRequests();
+                                System.out.println("Input 4 to cancel");
                                 requestID = sc.nextInt();
                                 sc.nextLine();
+                                if(requestID == 4) break;
                             }
-                            System.out.print("Input recipient ID: ");
+                            System.out.print("Input recipient ID (String): ");
                             String recipientID = sc.nextLine();
-                            System.out.println("Input project ID: ");
+                            System.out.println("Input project ID (Integer): ");
                             int projectID =sc.nextInt();
                             sc.nextLine();
-                            while(currentUser.makeRequest(recipientID, requestID, projectID) == 0){
+                            while(currentStudent.makeRequest(recipientID, requestID, projectID) == 0){
                                 System.out.print("Input recipient ID: ");
                                 recipientID = sc.nextLine();
                                 System.out.println("Input project ID: ");
@@ -141,17 +201,18 @@ public class App {
                             break;
 
                             case(2):
-                            if(currentUser.isProjectAssigned)currentUser.viewAllProjects();
-                            else currentUser.displayProjects();
+                            if(currentStudent.isProjectAssigned()) currentStudent.viewAllProjects();
+                            else currentStudent.displayProjects();
                             break;
 
                             case(3):
                             boolean cancel = false;
                             while(!cancel){
-                                System.out.println("Type \"cancel\" to cancel. Enter your old password: ");
+                                System.out.println("Type \"1\" to cancel. Enter your old password: ");
                                 String oldPass = sc.nextLine();
-                                if(oldPass = "cancel") cancel = true;
-                                else if (oldPass == currentUser.getPassword){
+                                if (oldPass.equals("1")) cancel = true;
+
+                                else if (oldPass == currentStudent.getPassword()){
                                     break;
                                 }
                                 else{
@@ -160,20 +221,20 @@ public class App {
                             }
                             if(cancel) break;
                             String newPass = "cancel";
-                            while(newPass == "cancel"){
+                            while (newPass.equals("cancel")){
                                 System.out.println("\"cancel\" can't be the new password. Enter a new password: ");
                                 newPass = sc.nextLine();
                             }
-                            currentUser.changePassword(newPass);
-                            System.out.println("Your password have been changed to " + currentUser.getPassword);
+                            currentStudent.changePassword(newPass);
+                            System.out.println("Your password have been changed to " + currentStudent.getPassword());
                             break;
 
                             case(4):
-                            currentUser.displayRequestHistory();
+                            currentStudent.displayRequestHistory();
                             break;
 
                             case(5):
-                            currentUser.logout();
+                            currentStudent.logout();
                             break;
 
                             default:
@@ -181,8 +242,8 @@ public class App {
                             break;
                         }
                     }
-
-                    while(currentUser.isLoggedIn && currentUser.isSupervisor){
+                    
+                    while(currentSupervisor.isLoggedIn() && currentSupervisor != null){
                         System.out.println("List of Available Actions: ");
                         System.out.println("1. Send Request");
                         System.out.println("2. See all my Projects");
@@ -191,20 +252,20 @@ public class App {
                         System.out.println("5. Check Inbox");
                         System.out.println("6. Create Project");
                         System.out.println("7. Logout");
-                        if(currentUser.isFYPCoordinator) System.out.println("8. View Projects by:");
-                        if(currentUser.isFYPCoordinator) System.out.println("9. View all projects");
-                        if(currentUser.isFYPCoordinator) System.out.println("10. View all request history");
+                        // if(currentUser.isFYPCoordinator()) System.out.println("8. View Projects by:");
+                        // if(currentUser.isFYPCoordinator()) System.out.println("9. View all projects");
+                        // if(currentUser.isFYPCoordinator()) System.out.println("10. View all request history");
                         int option3 = sc.nextInt();
                         sc.nextLine();
                         switch(option3){
                             case(1):
                             System.out.println("Choose a request type: ");
-                            currentUser.displayAvailableRequests();
+                            Supervisor.displayAvailableRequests();
                             int requestID = sc.nextInt();
                             sc.nextLine();
-                            while(currentUser.chooseAndSetRequest(requestID)){
+                            while(currentSupervisor.chooseAndSetRequest(requestID)!=0){
                                 System.out.println("Choose a request type: ");
-                                currentUser.displayAvailableRequests();
+                                currentSupervisor.displayAvailableRequests();
                                 requestID = sc.nextInt();
                                 sc.nextLine();
                             }
@@ -215,7 +276,8 @@ public class App {
                             sc.nextLine();
                             System.out.print("Input replacement ID");
                             String replacementID = sc.nextLine();
-                            while(currentUser.makeRequest(recipientFYPCoordinatorID, projectSupervisorID, replacementID) == 0){
+                            //Iterate until the request is sent
+                            while(currentSupervisor.makeRequest(recipientFYPCoordinatorID, projectSupervisorID, replacementID) == 0){
                                 System.out.print("Input recipient ID: ");
                                 recipientFYPCoordinatorID = sc.nextLine();
                                 System.out.println("Input project ID: ");
@@ -228,16 +290,17 @@ public class App {
                             break;
 
                             case(2):
-                            currentUser.displayProjects();
+                            currentSupervisor.displayProjects();
                             break;
 
                             case(3):
                             boolean cancel1 = false;
+                            //Iterate until the old password is correct or the user cancels
                             while(!cancel1){
-                                System.out.println("Type \"cancel\" to cancel. Enter your old password: ");
+                                System.out.println("Type \"1\" to cancel. Enter your old password: ");
                                 String oldPass = sc.nextLine();
-                                if(oldPass = "cancel") cancel = true;
-                                else if (oldPass == currentUser.getPassword){
+                                if (oldPass.equals("1")) cancel1 = true;
+                                else if (oldPass == currentSupervisor.getPassword()){
                                     break;
                                 }
                                 else{
@@ -245,110 +308,114 @@ public class App {
                                 }
                             }
                             if(cancel1) break;
-                            String newPass = "cancel";
-                            while(newPass == "cancel"){
-                                System.out.println("\"cancel\" can't be the new password. Enter a new password: ");
+                            boolean cancel2 = false;
+                            String newPass = null;
+                            //Iterate until the new password is not "cancel"
+                            while(!cancel2){
+                                System.out.println("Enter a new password: ");
                                 newPass = sc.nextLine();
                             }
-                            currentUser.changePassword(newPass);
-                            System.out.println("Your password have been changed to " + currentUser.getPassword);
+                            currentSupervisor.changePassword(newPass);
+                            System.out.println("Your password have been changed to " + currentSupervisor.getPassword());
                             break;
 
                             case(4):
-                            currentUser.displayRequestHistory();
+                            currentSupervisor.displayRequestHistory();
                             break;
 
                             case(5):
-                            currentUser.displayPendingRequest();
+                            currentSupervisor.viewAllPendingRequest();
                             break;
 
                             case(6):
                             System.out.println("Enter new project title: ");
                             String newTitle = sc.nextLine();
-                            currentUser.createProject(newTitle);
+                            currentSupervisor.createProject(newTitle);
                             break;
 
                             case(7):
-                            currentUser.logout();
+                            currentSupervisor.logout();
                             break;
 
-                            case(8):
-                            if(!currentUser.isSupervisor()){
-                                System.out.println("Please choose a valid option!");
-                            }
-                            else{
-                                System.out.println("1. Supervisor name");
-                                System.out.println("2. Supervisor ID");
-                                System.out.println("3. Status");
-                                int sortBy = sc.nextInt();
-                                sc.nextLine();
-                                switch(sortBy){
-                                    case(1):
-                                    System.out.println("Enter Supervisor Name: ");
-                                    String sortByName = sc.nextLine();
-                                    generateProjectReportBySupervisorName(sortByName);
-                                    break;
+                            // case(8):
+                            // if(currentSupervisor.isSupervisor()){
+                            //     System.out.println("Please choose a valid option!");
+                            // }
+                            // else{
+                            //     System.out.println("1. Supervisor name");
+                            //     System.out.println("2. Supervisor ID");
+                            //     System.out.println("3. Status");
+                            //     int sortBy = sc.nextInt();
+                            //     sc.nextLine();
+                            //     switch(sortBy){
+                            //         case(1):
+                            //         System.out.println("Enter Supervisor Name: ");
+                            //         String sortByName = sc.nextLine();
+                            //         generateProjectReportBySupervisorName(sortByName);
+                            //         break;
 
-                                    case(2):
-                                    System.out.println("Enter Supervisor ID: ");
-                                    String sortByID = sc.nextLine();
-                                    generateProjectReportBySupervisorID(sortByID);
-                                    break;
+                            //         case(2):
+                            //         System.out.println("Enter Supervisor ID: ");
+                            //         String sortByID = sc.nextLine();
+                            //         generateProjectReportBySupervisorID(sortByID);
+                            //         break;
 
-                                    case(3):
-                                    while(true){
-                                        System.out.println("Enter Availability (AVAILABLE, RESERVED, UNAVAILABLE, ALLOCATED): ");
-                                        String sortByAvailability = sc.nextLine();
-                                        ProjectStatus status;
-                                        if(sortByAvailability == "AVAILABLE"){
-                                            status = ProjectStatus.AVAILABLE;
-                                            break;
-                                        }
-                                        else if(sortByAvailability == "RESERVED"){
-                                            status = ProjectStatus.RESERVED;
-                                            break;
-                                        }
-                                        else if(sortByAvailability == "UNAVAILABLE"){
-                                            status = ProjectStatus.UNAVAILABLE;
-                                            break;
-                                        }
-                                        else if(sortByAvailability == "ALLOCATED"){
-                                            status = ProjectStatus.ALLOCATED;
-                                            break;
-                                        }
-                                        else{
-                                            System.out.println("Please input a proper Availability status");
-                                        }
-                                    }
-                                    generateProjectReportBySupervisorName(status);
-                                    break;
-                                }
-                            }
-                            break;
+                            //         case(3):
+                            //         ProjectStatus status;
+                            //         while(true){
+                            //             System.out.println("Enter Availability (AVAILABLE, RESERVED, UNAVAILABLE, ALLOCATED): ");
+                            //             String sortByAvailability = sc.nextLine();
+                            //             if(sortByAvailability == "AVAILABLE"){
+                            //                 status = ProjectStatus.AVAILABLE;
+                            //                 break;
+                            //             }
+                            //             else if(sortByAvailability == "RESERVED"){
+                            //                 status = ProjectStatus.RESERVED;
+                            //                 break;
+                            //             }
+                            //             else if(sortByAvailability == "UNAVAILABLE"){
+                            //                 status = ProjectStatus.UNAVAILABLE;
+                            //                 break;
+                            //             }
+                            //             else if(sortByAvailability == "ALLOCATED"){
+                            //                 status = ProjectStatus.ALLOCATED;
+                            //                 break;
+                            //             }
+                            //             else{
+                            //                 System.out.println("Please input a proper Availability status");
+                            //             }
+                            //         }
+                            //         FYPCoordinator.generateProjectReportByStatus(status); 
+                            //         break;
+                            //     }
+                            // }
+                            // break;
 
-                            case(9):
-                            if(!currentUser.isSupervisor()){
-                                System.out.println("Please choose a valid option!");
-                            }
-                            else{
-                                Project.displayAllProjects();
-                            }
-                            break;
+                            // case(9):
+                            // if(!currentUser.isSupervisor()){
+                            //     System.out.println("Please choose a valid option!");
+                            // }
+                            // else{
+                            //     Project.displayAllProjects();
+                            // }
+                            // break;
 
-                            case(10):
-                            if(!currentUser.isSupervisor()){
-                                System.out.println("Please choose a valid option!");
-                            }
-                            else{
-                                DisplayAll.displayRequestHistory(); //This one I'm not sure, pls cross check
-                            }
-                            break;
+                            // case(10):
+                            // if(!currentUser.isSupervisor()){
+                            //     System.out.println("Please choose a valid option!");
+                            // }
+                            // else{
+                            //     DisplayAll.displayRequestHistory(); //This one I'm not sure, pls cross check
+                            // }
+                            // break;
 
                             default:
                             System.out.println("Please choose a valid option!");
                             break;
                         }
                     }
+                    break;
+                    
 
                 }
                 

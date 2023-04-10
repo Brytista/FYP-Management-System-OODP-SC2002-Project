@@ -18,20 +18,34 @@ public class Supervisor extends User {
 
     public Supervisor(String userID, String password, String name, String email){
         super(userID, password, name, email);
+        addToSupervisorList(this); 
     }
 
     public int createProject(String projectTitle){
-        Project newProject = new Project(this, projectTitle);
-        if(Project.addToProjectList(newProject) == 0) return 0;
-        projectList.add(newProject);
-        return 1;
-    }
-
-    public void displayProjects(){
-        for (Project project: projectList){
-            project.displayProject();
+        try {
+            Project newProject = new Project(this, projectTitle);
+            if (Project.addToProjectList(newProject) == 0) {
+                return 0;
+            }
+            projectList.add(newProject);
+            return 1;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
         }
     }
+    
+
+    public void displayProjects() {
+        try {
+            for (Project project : projectList) {
+                project.displayProject();
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+    
 
     @Override
     public int chooseAndSetRequest(int requestID) {
@@ -57,222 +71,357 @@ public class Supervisor extends User {
     }
 
     public int modifyProjectTitle(int projectID, String newTitle){
-        Project project = Project.getProjectByID(projectID);
-        if(doesProjectBelongToSupervisor(project)){
-            project.changeProjectTitle(newTitle);
-            return 1;
+        try {
+            Project project = Project.getProjectByID(projectID);
+            if (doesProjectBelongToSupervisor(project)) {
+                project.changeProjectTitle(newTitle);
+                return 1;
+            }
+            return 0;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
         }
-        return 0;
     }
+
 
     public boolean capReached() {
-        if (numberOfProjectManaged >= 2) {
-            return true;
-        } else
+        try {
+            if (numberOfProjectManaged >= 2) {
+                return true;
+            } else
+                return false;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
             return false;
+        }
     }
+    
 
     public static void displayAvailableRequests() {
-        for (String request : availableRequests) {
-            System.out.println(request);
+        try {
+            for (String request : availableRequests) {
+                System.out.println(request);
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
+    
 
     public static int addAvailableRequest(String request) {
-        if(availableRequests.contains(request)||request==null) return 0;
-        availableRequests.add(request);
-        return 1;
+        try {
+            if(availableRequests.contains(request)||request==null) return 0;
+            availableRequests.add(request);
+            return 1;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
     }
+
 
     public void viewAllPendingRequest(){
-        if(pendingRequest.size() == 0){
-            System.out.println("There are no pending Request");
+        try {
+            if(pendingRequest.size() == 0){
+                System.out.println("There are no pending Request");
+            }
+            DisplayRequest.displayPendingRequest(pendingRequest);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
-        DisplayRequest.displayPendingRequest(pendingRequest);
     }
+    
 
     public int makeRequest(String recipientID, int projectID, String replacementSupervisorID) {
-        Project project = selectProject(projectID);
-        Supervisor replacementSupervisor = selectSupervisor(replacementSupervisorID);
-        FYPCoordinator FYPCoor = selectRecipient(recipientID);
-        if (project == null||FYPCoor==null||replacementSupervisor==null)
-            return 0;
-        if(requestType!=null){
-            requestType.create(this, FYPCoor, project, replacementSupervisor); // create request
-            if(requestType.sendRequest()==1){
-                return 1; // request sent
+        try {
+            Project project = selectProject(projectID);
+            Supervisor replacementSupervisor = selectSupervisor(replacementSupervisorID);
+            FYPCoordinator FYPCoor = selectRecipient(recipientID);
+            if (project == null||FYPCoor==null||replacementSupervisor==null)
+                return 0;
+            if(requestType!=null){
+                requestType.create(this, FYPCoor, project, replacementSupervisor); // create request
+                if(requestType.sendRequest()==1){
+                    return 1; // request sent
+                }
+                else{
+                    return 0; // request not sent
+                }
             }
-            else{
-                return 0; // request not sent
-            }
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to make the request: " + e.getMessage());
         }
-        
-
+            
         return 1;
     }
+    
+    
 
     public FYPCoordinator selectRecipient(String recipientID){
-        return FYPCoordinator.getCoordinatorByID(recipientID);
+        try {
+            return FYPCoordinator.getCoordinatorByID(recipientID);
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to retrieve the FYP Coordinator with ID " + recipientID + ": " + e.getMessage());
+            return null;
+        }
     }
-
+    
     public Supervisor selectSupervisor(String replacementSupervisorID){
-        return Supervisor.getSupervisorByID(replacementSupervisorID);
+        try {
+            return Supervisor.getSupervisorByID(replacementSupervisorID);
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to retrieve the supervisor with ID " + replacementSupervisorID + ": " + e.getMessage());
+            return null;
+        }
     }
-
+    
+    
     public void displayAllSupervisor(){
-        for (Supervisor supervisor: allSupervisor){
-            String name = supervisor.getUserName();
-            String UserID = supervisor.getUserID();
-            String userEmail = supervisor.getEmail();
-            System.out.println("Name: " + name + ", UserID: " + UserID + "Email: " + userEmail + "\n");
+        try {
+            for (Supervisor supervisor: allSupervisor){
+                String name = supervisor.getUserName();
+                String UserID = supervisor.getUserID();
+                String userEmail = supervisor.getEmail();
+                System.out.println("Name: " + name + ", UserID: " + UserID + "Email: " + userEmail + "\n");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to display the supervisors: " + e.getMessage());
+        }
     }
-}
+    
 
 
     public int makeAllProjectsAvailable(){
-        return Project.massModifyProjectStatus(this.getUserID(), ProjectStatus.AVAILABLE);
-    }
-
-    public int makeAllProjectsUnavailable(){
-        return Project.massModifyProjectStatus(this.getUserID(), ProjectStatus.UNAVAILABLE);
-    }
-
-    public List<Student> getStudentsManaged(){
-        List<Student> arr = new ArrayList<>();
-        for(Project project: projectList){
-            if(project.getProjectStatus() == ProjectStatus.ALLOCATED){
-                arr.add(project.getStudent());
-            }
+        try {
+            return Project.massModifyProjectStatus(this.getUserID(), ProjectStatus.AVAILABLE);
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to make all projects available: " + e.getMessage());
+            return 0;
         }
-        return arr;
     }
+    
+    public int makeAllProjectsUnavailable(){
+        try {
+            return Project.massModifyProjectStatus(this.getUserID(), ProjectStatus.UNAVAILABLE);
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to make all projects unavailable: " + e.getMessage());
+            return 0;
+        }
+    }
+    
+    public List<Student> getStudentsManaged(){
+        try {
+            List<Student> arr = new ArrayList<>();
+            for(Project project: projectList){
+                if(project.getProjectStatus() == ProjectStatus.ALLOCATED){
+                    arr.add(project.getStudent());
+                }
+            }
+            return arr;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to get the managed students: " + e.getMessage());
+            return null;
+        }
+    }
+    
 
 
     public static Supervisor getSupervisorByName(String name){
-        for(Supervisor supervisor: allSupervisor){
-            if(supervisor.getUserName().equals(name)){
-                return supervisor;
+        try {
+            for(Supervisor supervisor: allSupervisor){
+                if(supervisor.getUserName().equals(name)){
+                    return supervisor;
+                }
             }
+            return null;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to get the supervisor by name: " + e.getMessage());
+            return null;
         }
-        return null;
     }
-
-
+    
     public static Supervisor getSupervisorByID(String UserID){
-        for(Supervisor supervisor: allSupervisor){
-            if(supervisor.getUserID() == UserID){
-                return supervisor;
+        try {
+            for(Supervisor supervisor: allSupervisor){
+                if(supervisor.getUserID().equals(UserID)){
+                    return supervisor;
+                }
             }
+            return null;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to get the supervisor by ID: " + e.getMessage());
+            return null;
         }
-        return null;
     }
+    
+
 
 
     public static int addInitialSupervisor(List<Supervisor> supervisorLists){
-        if(supervisorLists == null) return 0;
-        for(Supervisor supervisor : supervisorLists) {
-            allSupervisor.add(supervisor);
-        }
-        return 1;
-    }
-
-    public static int addToSupervisorList(Supervisor supervisor) {
-        if (supervisor == null)
-            return 0;
-        allSupervisor.add(supervisor);
-        return 1;
-    }
-
-    public static int removeFromSupervisorList(Supervisor supervisor){
-        boolean found = false;
-        for(Supervisor supervisors: allSupervisor){
-            if(supervisor.equals(supervisors)){
-                found = true;
-                break;
+        try {
+            if(supervisorLists == null) return 0;
+            for(Supervisor supervisor : supervisorLists) {
+                allSupervisor.add(supervisor);
             }
+            return 1;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to add initial supervisors: " + e.getMessage());
+            return 0;
         }
-        if(!found) return 0;
-        allSupervisor.remove(supervisor);
-        return 1;
     }
-
+    
+    public static int addToSupervisorList(Supervisor supervisor) {
+        try {
+            if (supervisor == null)
+                return 0;
+            allSupervisor.add(supervisor);
+            return 1;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to add a supervisor to the list: " + e.getMessage());
+            return 0;
+        }
+    }
+    
+    public static int removeFromSupervisorList(Supervisor supervisor){
+        try {
+            boolean found = false;
+            for(Supervisor supervisors: allSupervisor){
+                if(supervisor.equals(supervisors)){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) return 0;
+            allSupervisor.remove(supervisor);
+            return 1;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to remove a supervisor from the list: " + e.getMessage());
+            return 0;
+        }
+    }
+    
     private Project selectProject(int projectID) {
-        return Project.getProjectByID(projectID);
+        try {
+            return Project.getProjectByID(projectID);
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to select the project with ID " + projectID + ": " + e.getMessage());
+            return null;
+        }
     }
+    
+
+
 
     public int addPendingRequest(Request request) {
-        if (request == null)
+        try {
+            if (request == null)
+                return 0;
+            pendingRequest.add(request);
+            return 1;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to add a pending request: " + e.getMessage());
             return 0;
-        pendingRequest.add(request);
-        return 1;
-    }
-
-    public boolean doesProjectBelongToSupervisor(Project project){
-        for(Project projects: projectList){
-            if(project.equals(projects)){
-
-                return true;
-            }
         }
-        return false;
     }
-
+    
+    public boolean doesProjectBelongToSupervisor(Project project){
+        try {
+            for(Project projects: projectList){
+                if(project.equals(projects)){
+    
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to determine if the project belongs to the supervisor: " + e.getMessage());
+            return false;
+        }
+    }
+    
     public int addStudentManaged(Student student) {
-        if (capReached())
+        try {
+            if (capReached())
+                return 0;
+            numberOfProjectManaged++;
+            studentManaged.add(student);
+            return 1;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to add a managed student: " + e.getMessage());
             return 0;
-        numberOfProjectManaged++;
-        studentManaged.add(student);
-        return 1;
+        }
     }
-
+    
     @Override
     public boolean isSupervisor() {
         return true;
     }
-
+    
     public int removeStudentManaged(Student student) {
-        if (numberOfProjectManaged == 0)
+        try {
+            if (numberOfProjectManaged == 0)
+                return 0;
+            numberOfProjectManaged--;
+            if(studentManaged.remove(student)) return 1;
+            else return 0;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to remove a managed student: " + e.getMessage());
             return 0;
-        numberOfProjectManaged--;
-        if(studentManaged.remove(student)) return 1;
-        else return 0;
+        }
     }
-   
+    
+
+
     public int removePendingRequest(Request request){
-        for(Request requests: pendingRequest){
-            if(request.equals(requests)){
-                pendingRequest.remove(request);
-                return 1;
+        try {
+            for(Request requests: pendingRequest){
+                if(request.equals(requests)){
+                    pendingRequest.remove(request);
+                    return 1;
+                }
             }
+            return 0;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to remove a pending request: " + e.getMessage());
+            return 0;
         }
-        return 0;
     }
-
+    
     public int addProject(Project project){
-        if(project == null) return 0;
-        createProject(project.getSupervisor(), project.getProjectTitle());
-        return 1;
-    }
-
-    public int removeProject(Project project){
-        for(Project projects: projectList){
-            if(project.equals(projects)){
-                projectList.remove(projects);
-                Project.removeFromProjectList(projects);
-                return 1;
-            }
+        try {
+            if(project == null) return 0;
+            createProject(project.getProjectTitle());
+            return 1;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to add a project: " + e.getMessage());
+            return 0;
         }
-        return 0;
     }
+    
+    public int removeProject(Project project){
+        try {
+            for(Project projects: projectList){
+                if(project.equals(projects)){
+                    projectList.remove(projects);
+                    Project.removeFromProjectList(projects);
+                    return 1;
+                }
+            }
+            return 0;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to remove a project: " + e.getMessage());
+            return 0;
+        }
+    }
+    
 
-    // login(): returns 1 if login is successful, otherwise 0 and error is logged
     public static int loginSupervisor(String userID, String password) {
         try {
             for (Supervisor supervisor : allSupervisor) {
                 if (supervisor.getUserID().equals(userID)) {
                     if (supervisor.getPassword().equals(password)) {
                         // User exists and password is correct
-                        supervisor.login();
                         return 1;
                     } else {
                         // User exists but password is incorrect

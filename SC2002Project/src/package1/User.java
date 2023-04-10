@@ -3,7 +3,7 @@ package package1;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class User {
+abstract class User{
 
     private String userID;
     private String password;
@@ -11,7 +11,6 @@ abstract class User {
     private boolean loggedIn = false;
     private String email;
 
-    private static List<User> users = new ArrayList<>();
     private List<Request> requestHistory = new ArrayList<>();
 
     // Constructor
@@ -67,9 +66,9 @@ abstract class User {
         return password;
     }
 
-    // setPassword(): sets the password; 1 returned if successful, otherwise 0 and
+       // changePassword(): returns 1 if password change is successful, otherwise 0 and
     // error is logged
-    public int setPassword(String password) {
+    public int changePassword(String password) {
         try {
             this.password = password;
         } catch (Exception e) {
@@ -98,10 +97,24 @@ abstract class User {
         return 1;
     }
 
+    
+    public int login(){
+        try {
+            if(loggedIn) return 0;
+            loggedIn = true;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+    
+        return 1;
+    }
+    
+
     // logout(): returns 1 if logout is successful, otherwise 0 and error is logged
     public int logout() {
         try {
-            this.loggedIn = false;
+            this.loggedIn = false; // set loggedIn to false
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
@@ -109,19 +122,7 @@ abstract class User {
 
         return 1;
     }
-
-    // changePassword(): returns 1 if password change is successful, otherwise 0 and
-    // error is logged
-    public int changePassword(String password) {
-        try {
-            this.password = password;
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            return 0;
-        }
-
-        return 1;
-    }
+ 
 
     // addRequestToHistory(): adds a request to the user's request history;
     // 1 returned if successful, otherwise 0 and error is logged
@@ -138,8 +139,13 @@ abstract class User {
 
     // displayRequestHistory(): displays the user's request history
     public void displayRequestHistory() {
-        DisplayRequest.displayRequestHistory(requestHistory);
+        try {
+            DisplayRequest.displayRequestHistory(requestHistory);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
+    
 
     public boolean isStudent() {
         return false;
@@ -157,9 +163,4 @@ abstract class User {
         return loggedIn;
     }
 
-    public int logIn(){
-        if(loggedIn) return 0;
-        loggedIn = true;
-        return 1;
-    }
 }

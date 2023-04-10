@@ -8,55 +8,91 @@ public class FYPCoordinator extends Supervisor {
 
     public FYPCoordinator(String userID, String password, String name, String email) {
         super(userID, password, name, email);
-        coordinators.add(this);
+        try {
+            addCoordinatorToList(this);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
-
+    
     public void viewAllProjects() {
-        Project.displayAllProjects();
+        try {
+            Project.displayAllProjects();
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
-
+    
     public void generateProjectReportBySupervisorName(String supervisorName) {
-        for (Project project : Project.projectList) {
-            if (project.supervisor.getUserName().equals(supervisorName))
-                project.displayProject();
+        try {
+            for (Project project : Project.projectList) {
+                if (project.supervisor.getUserName().equals(supervisorName))
+                    project.displayProject();
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
-
+    
     public void generateProjectReportBySupervisorID(String supervisorID) {
-        for (Project project : Project.projectList) {
-            if (project.supervisor.getUserID().equals(supervisorID))
-                project.displayProject();
+        try {
+            for (Project project : Project.projectList) {
+                if (project.supervisor.getUserID().equals(supervisorID))
+                    project.displayProject();
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
-
+    
+    
     public void generateProjectReportByStatus(ProjectStatus status) {
-        for (Project project : Project.projectList) {
-            if (project.projectStatus.equals(status))
-                project.displayProject();
+        try {
+            for (Project project : Project.projectList) {
+                if (project.projectStatus.equals(status))
+                    project.displayProject();
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
-
+    
     static public FYPCoordinator getCoordinatorByName(String coordinatorName) {
-        for (FYPCoordinator coordinator : coordinators) {
-            if (coordinator.getUserName().equals(coordinatorName))
-                return coordinator;
+        try {
+            for (FYPCoordinator coordinator : coordinators) {
+                if (coordinator.getUserName().equals(coordinatorName))
+                    return coordinator;
+            }
+            return null;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return null;
         }
-        return null;
     }
-
+    
     static public FYPCoordinator getCoordinatorByID(String coordinatorID) {
-        for (FYPCoordinator coordinator : coordinators) {
-            if (coordinator.getUserID().equals(coordinatorID))
-                return coordinator;
+        try {
+            for (FYPCoordinator coordinator : coordinators) {
+                if (coordinator.getUserID().equals(coordinatorID))
+                    return coordinator;
+            }
+            return null;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return null;
         }
-        return null;
     }
-
+    
     static public void displayAllCoordinators() {
-        for (FYPCoordinator coordinator : coordinators) {
-            System.out.println(coordinator.getUserID() + " " + coordinator.getUserName());
+        try {
+            for (FYPCoordinator coordinator : coordinators) {
+                System.out.println(coordinator.getUserID() + " " + coordinator.getUserName());
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
+    
 
     static public int addInitialCoordinators(List<FYPCoordinator> coordList) {
         try {
@@ -82,19 +118,28 @@ public class FYPCoordinator extends Supervisor {
         return 1;
     }
 
+    static public int removeCoordinatorFromList(FYPCoordinator coordinator) {
+        try {
+            coordinators.remove(coordinator);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+
     @Override
     public boolean isFYPCoordinator() {
         return true;
     }
 
-    // login(): returns 1 if login is successful, otherwise 0 and error is logged
     public static int loginFYPCoordinator (String userID, String password) {
         try {
             for (FYPCoordinator fypcoordinator : coordinators) {
                 if (fypcoordinator.getUserID().equals(userID)) {
                     if (fypcoordinator.getPassword().equals(password)) {
                         // User exists and password is correct
-                        fypcoordinator.login();
                         return 1;
                     } else {
                         // User exists but password is incorrect

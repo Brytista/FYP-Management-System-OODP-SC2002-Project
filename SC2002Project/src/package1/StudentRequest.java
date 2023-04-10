@@ -7,32 +7,49 @@ public abstract class StudentRequest extends Request {
     }
     
     public int sendRequest() {
-        // Send the request to the recipient
-        if (sender == null || recipient == null) {
-            return 0; // failure, sender or recipient is null
+        try {
+            // Send the request to the recipient
+            if (sender == null || recipient == null) {
+                return 0; // failure, sender or recipient is null
+            }
+            sender.addRequestToHistory(this);
+            recipient.addPendingRequest(this);
+            return 1; // success
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        sender.addRequestToHistory(this);
-        recipient.addPendingRequest(this);
-        return 1; // success
     }
+    
     public int create(Student sender, Supervisor recipient, Project project){
-        if(sender == null || recipient == null || project == null){
-            return 0;
+        try {
+            if(sender == null || recipient == null || project == null){
+                return 0;
+            }
+            this.sender = sender;
+            this.recipient = recipient;
+            this.project = project;
+            this.isReviewed = false;
+            this.status = RequestStatus.PENDING;
+            return 1;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        this.sender = sender;
-        this.recipient = recipient;
-        this.project = project;
-        this.isReviewed = false;
-        this.status = RequestStatus.PENDING;
-        return 1;
     }
-
+    
     public int changeSender(Student sender){
-        if (!(sender.isStudent())) {
-            return 0; // failure, not an instance of Sender or its subclasses
+        try {
+            if (!(sender.isStudent())) {
+                return 0; // failure, not an instance of Sender or its subclasses
+            }
+            this.sender = sender;
+            return 1; // success
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        this.sender = sender;
-        return 1; // success
     }
+    
     
 }

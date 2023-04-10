@@ -11,54 +11,85 @@ public abstract class SupervisorRequest extends Request {
     }
     
     public int changeReplacementSupervisor(Supervisor replacementSupervisor) {
-        if (replacementSupervisor == null) {
-            return 0; // failure, replacementSupervisor is null
+        try {
+            if (replacementSupervisor == null) {
+                return 0; // failure, replacementSupervisor is null
+            }
+            this.replacementSupervisor = replacementSupervisor;
+            return 1; // success
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        this.replacementSupervisor = replacementSupervisor;
-        return 1; // success
     }
+    
     public void displayReplacementSupervisor() {
-        System.out.println("Replacement Supervisor:"+ replacementSupervisor);
+        try {
+            System.out.println("Replacement Supervisor:"+ replacementSupervisor);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
 
     @Override
     public int sendRequest(){
-        //Send the request to the recipient
-        if (sender == null || recipient == null) {
-            return 0; // failure, sender or recipient is null
+        try {
+            //Send the request to the recipient
+            if (sender == null || recipient == null) {
+                return 0; // failure, sender or recipient is null
+            }
+            sender.addRequestToHistory(this);
+            recipient.addPendingRequest(this);
+            return 1; // success
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        sender.addRequestToHistory(this);
-        recipient.addPendingRequest(this);
-        return 1; // success
     }
 
     public int create(Supervisor sender, FYPCoordinator recipient, Project project, Supervisor replacementSupervisor){
-        if(sender == null || recipient == null || project == null || replacementSupervisor == null){
-            return 0;
+        try {
+            if(sender == null || recipient == null || project == null || replacementSupervisor == null){
+                return 0;
+            }
+            this.sender = sender;
+            this.recipient = recipient;
+            this.project = project;
+            this.replacementSupervisor = replacementSupervisor;
+            this.isReviewed = false;
+            this.status = RequestStatus.PENDING;
+            return 1;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        this.sender = sender;
-        this.recipient = recipient;
-        this.project = project;
-        this.replacementSupervisor = replacementSupervisor;
-        this.isReviewed = false;
-        this.status = RequestStatus.PENDING;
-        return 1;
     }
 
     public int changeRecipient(FYPCoordinator recipient){
-        //Make a check to see if the user is a supervisor
-        if (recipient == null) {
-            return 0; // failure, recipient is null
+        try {
+            //Make a check to see if the user is a supervisor
+            if (recipient == null) {
+                return 0; // failure, recipient is null
+            }
+            this.recipient = recipient;
+            return 1; // success
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        this.recipient = recipient;
-        return 1; // success
     }
 
     public int changeSender(Supervisor sender){
-        if (!(sender.isSupervisor())) {
-            return 0; // failure, not an instance of Sender or its subclasses
+        try {
+            if (!(sender.isSupervisor())) {
+                return 0; // failure, not an instance of Sender or its subclasses
+            }
+            this.sender = sender;
+            return 1; // success
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return 0; // failure
         }
-        this.sender = sender;
-        return 1; // success
     }
+
 }
