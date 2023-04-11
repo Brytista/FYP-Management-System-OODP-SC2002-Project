@@ -11,6 +11,7 @@ public class Student extends User {
     private StudentRequestWithString requestTypeWithString;
     private Project project;
     private Boolean requestProject = false; // true if student has requested for a project
+    private Boolean isDeregistered = false; // true if student has deregistered
 
     private static List<Student> students = new ArrayList<>();
     private static List<String> availableRequests = new ArrayList<>(
@@ -24,6 +25,16 @@ public class Student extends User {
         addToStudentsList(this); // add student to students list
     }
 
+    public int setIsDeregistered(Boolean change){
+        if(change == null) return 0; // failure (change cannot be null
+        this.isDeregistered = change;
+        return 1; 
+    }
+
+    public Boolean getIsDeregistered(){
+        return this.isDeregistered;
+    }
+
     public static Student createStudent(String userID, String password, String name, String email){
         try {
             if(Student.getStudentByID(userID)==null) {
@@ -34,7 +45,9 @@ public class Student extends User {
                 return newStudent;
             }
             else{
+                System.out.println("--------------------");
                 System.out.println("Error: User ID already exists");
+                System.out.println("--------------------");
                 return null;
             }
         
@@ -50,6 +63,11 @@ public class Student extends User {
             if (this.isProjectAssigned()) {
                 this.project.displayProject();
             }
+            else{
+                System.out.println("--------------------");
+                System.out.println("You have not registered a project.");
+                System.out.println("--------------------");
+            }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -59,6 +77,7 @@ public class Student extends User {
     // displayAvailableRequests(): displays all available requests
     public static void displayAvailableRequests() {
         try {
+
             for (String request : availableRequests) {
                 System.out.println(request);
             }
@@ -94,6 +113,7 @@ public class Student extends User {
         }
         return -1;
     }
+    
 
     // ADD NEW METHODS HERE
     public Boolean returnRequestProject(){
@@ -236,6 +256,12 @@ private Supervisor selectRecipient(String supervisorID) {
 // viewAllProjects(): displays all available projects
 public void viewAllProjects() {
     try {
+        if(this.getIsDeregistered()){
+            System.out.println("--------------------");
+            System.out.println("You are not allowed to make selection again as you deregistered your FYP");
+            System.out.println("--------------------");
+            return;
+        }
         Project.displayAvailableProjects();
     } catch (Exception e) {
         System.err.println("Error: " + e.getMessage());
@@ -265,6 +291,10 @@ public boolean isProjectAssigned() {
     }
 }
 
+    public Project getProject(){
+        return this.project;
+    }
+
 
     // removeProject(): removes the student's project
     public int removeProject() {
@@ -279,10 +309,12 @@ public boolean isProjectAssigned() {
     }
 
         // displayAllStudents(): displays all students
-        public void displayAllStudents() {
+        public static void displayAllStudents() {
             try {
                 for (Student student : students) {
-                    System.out.println(student.getUserID() + " " + student.getUserName());
+                    System.out.println("Student ID: " + student.getUserID());
+                    System.out.println("Student Name: " + student.getUserName());
+                    System.out.println("Student Email: " + student.getEmail());
             }
             } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());

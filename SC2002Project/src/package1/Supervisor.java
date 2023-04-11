@@ -18,12 +18,8 @@ public class Supervisor extends User {
 
     public Supervisor(String userID, String password, String name, String email){
         super(userID, password, name, email);
-        if(this instanceof FYPCoordinator){
-            //do nothing
-        }
-        else{
             addToSupervisorList(this); 
-        }
+        
     }
 
     public static Supervisor createSupervisor(String userID, String password, String name, String email){
@@ -45,7 +41,10 @@ public class Supervisor extends User {
 
     public int createProject(String projectTitle){
         try {
-            Project newProject = new Project(this, projectTitle);
+            Project newProject = new Project(this, projectTitle); //In the project creation, it automatically add the project to the supervisor's project list
+            if(this.capReached()){
+                this.makeAllProjectsUnavailable(); // make all projects unavailable if the supervisor has reached his cap
+            }
             return 1;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -400,10 +399,9 @@ public class Supervisor extends User {
     
     public int addStudentManaged(Student student) {
         try {
-            if (capReached()){
-                return 0;}
-            numberOfProjectManaged++;
+            if (student == null) return 0;
             studentManaged.add(student);
+            numberOfProjectManaged++;
             return 1;
         } catch (Exception e) {
             System.out.println("An error occurred while trying to add a managed student: " + e.getMessage());
@@ -459,14 +457,22 @@ public class Supervisor extends User {
     
     public int removeProject(Project project){
         try {
+            boolean capReachedBefore = this.capReached(); // Check if the supervisor has reached the cap before removing the project
             for(Project projects: projectList){
                 if(project.equals(projects)){
                     projectList.remove(projects);
                     Project.removeFromProjectList(projects);
-                    return 1;
+                    this.removeStudentManaged(project.getStudent());
+                    break; 
                 }
             }
-            return 0;
+            if(capReachedBefore && !this.capReached()){
+                this.makeAllProjectsAvailable(); 
+                return 1; 
+            }
+            else{
+                return 1; 
+            }
         } catch (Exception e) {
             System.out.println("An error occurred while trying to remove a project: " + e.getMessage());
             return 0;

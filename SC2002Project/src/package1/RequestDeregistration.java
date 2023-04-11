@@ -17,10 +17,11 @@ public class RequestDeregistration extends StudentRequest {
                 recipient.removePendingRequest(this) == 0 ||
                 recipient.addRequestToHistory(this) == 0 ||
                 sender.removeProject() == 0 ||
+                sender.setIsDeregistered(true) == 0 || // set the student to be deregistered
                 supervisor.removeStudentManaged(sender) == 0 ||
                 project.removeStudent() == 0 ||
                 this.changeStatus(RequestStatus.APPROVED) == 0 ||
-                this.makeIsReviewed() == 0) {return 0;}
+                this.makeIsReviewed() == 0) {return 0;} 
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

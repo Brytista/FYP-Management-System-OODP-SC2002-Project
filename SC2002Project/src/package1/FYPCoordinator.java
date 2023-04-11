@@ -60,6 +60,21 @@ public class FYPCoordinator extends Supervisor {
             System.err.println("Error: " + e.getMessage());
         }
     }
+
+    public void generateProjectReportByStudentID (String studentID) {
+        try {
+            Project project = Student.getStudentByID(studentID).getProject(); 
+            if(project == null) {
+                System.out.println("Student has not been assigned a project");
+            }
+            else {
+                project.displayProject();
+            }
+            return; 
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
     
     static public FYPCoordinator getCoordinatorByName(String coordinatorName) {
         try {

@@ -1,4 +1,5 @@
 package package1;
+import java.util.Scanner;
 
 public class RequestChangeSupervisor extends SupervisorRequest {
     
@@ -10,9 +11,13 @@ public class RequestChangeSupervisor extends SupervisorRequest {
         this.project = project;
         this.replacementSupervisor = replacementSupervisor;
     }
+    private String extraDescription = null; // extra description for the request
+
     @Override
     public int approve() {
         try {
+            boolean senderCapReachedBefore = sender.capReached(); // check if the sender has reached his cap before
+            Scanner sc; 
             if(sender == null || recipient == null || replacementSupervisor == null || project == null){
                 System.out.println("Cannot approve request as sender, recipient, replacement supervisor or project is null");
                 return 0; // failure, sender or recipient is null
@@ -20,12 +25,17 @@ public class RequestChangeSupervisor extends SupervisorRequest {
 
             if(project.getProjectStatus()==ProjectStatus.ALLOCATED){
             if(replacementSupervisor.capReached()){
-                System.out.println("Cannot approve request as replacement supervisor has reached cap");
-                this.changeStatus(RequestStatus.REJECTED);
-                return 0; 
-            }
-            if(sender.capReached()){
-                if(sender.makeAllProjectsAvailable()==0){return 0;} // make all projects available if the supervisor who send the request reached his cap before
+                System.out.println("The replacement supervisor has reached cap number of student managed, you may not want to accept the request. You sure to continue? (0 for No, enter anything else for YES)");
+                int answer; 
+                try{
+                    sc = new Scanner(System.in);
+                    answer = sc.nextInt();
+                    sc.nextLine(); // consume the newline
+                    if(answer==0){return 0;}
+                } catch (Exception e) {
+                    System.err.println("Error: " + e.getMessage());
+                    return 0; 
+                }
             }
             if(
                 project.changeSupervisor(replacementSupervisor)==0||
@@ -57,8 +67,14 @@ public class RequestChangeSupervisor extends SupervisorRequest {
                 System.err.println("Some steps in the project allocation is not successful");
                 return 0; 
             }
+            if(replacementSupervisor.capReached()){
+                if(replacementSupervisor.makeAllProjectsUnavailable()==0){return 0;}; // make all projects unavailable if the supervisor has reached his cap
+            }
             }
             if(this.changeStatus(RequestStatus.APPROVED)==0){return 0;}
+            if(senderCapReachedBefore && !sender.capReached()){
+                if(sender.makeAllProjectsAvailable()==0){return 0;} // make all projects available if the supervisor who send the request reached his cap before
+            }
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -102,7 +118,14 @@ public class RequestChangeSupervisor extends SupervisorRequest {
 
     public void displayRequestDescription(){
         try {
+            if(project.getProjectStatus()==ProjectStatus.ALLOCATED&&replacementSupervisor.capReached()){
+                extraDescription = "The replacement supervisor has reached cap number of student managed, you may not want to accept the request." + "He/She is currently managing "+ replacementSupervisor.getStudentsManaged().size() + " students."; 
+            }
+            else{
+                extraDescription = "No extra notice"; 
+            }
             System.out.println("Request to change supervisor for project " + project.getProjectTitle() + " from " + sender.getUserName() + " to " + replacementSupervisor.getUserName());
+            System.out.println("EXTRA NOTICE: "+ extraDescription);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
