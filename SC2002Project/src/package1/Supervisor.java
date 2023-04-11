@@ -7,27 +7,45 @@ import java.util.Arrays;
 
 public class Supervisor extends User {
     int numberOfProjectManaged = 0;
-    List<Project> projectList;
-    List<Request> pendingRequest;
+    List<Project> projectList = new ArrayList<Project>();
+    List<Request> pendingRequest = new ArrayList<Request>();
     private static List<String> availableRequests = new ArrayList<>(Arrays.asList("1. Change Supervisor")); 
     private SupervisorRequest requestType;
-    static List<Supervisor> allSupervisor;
-    List<Student> studentManaged;
+    private static List<Supervisor> allSupervisor = new ArrayList<Supervisor>() ;
+    List<Student> studentManaged = new ArrayList<Student>();
     Scanner sc = new Scanner(System.in);
 
 
     public Supervisor(String userID, String password, String name, String email){
         super(userID, password, name, email);
-        addToSupervisorList(this); 
+        if(this instanceof FYPCoordinator){
+            //do nothing
+        }
+        else{
+            addToSupervisorList(this); 
+        }
+    }
+
+    public static Supervisor createSupervisor(String userID, String password, String name, String email){
+        try {
+            if(Supervisor.getSupervisorByID(userID)==null) {
+                Supervisor newSupervisor = new Supervisor(userID, password, name, email);
+                return newSupervisor;
+            }
+            else{
+                System.out.println("Error: User ID already exists");
+                return null;
+            }
+        
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return null;
+        }
     }
 
     public int createProject(String projectTitle){
         try {
             Project newProject = new Project(this, projectTitle);
-            if (Project.addToProjectList(newProject) == 0) {
-                return 0;
-            }
-            projectList.add(newProject);
             return 1;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -38,8 +56,14 @@ public class Supervisor extends User {
 
     public void displayProjects() {
         try {
-            for (Project project : projectList) {
-                project.displayProject();
+            if(projectList.isEmpty()){
+                System.out.println("You have no project yet");
+                return;
+            }
+            else{
+                for (Project project : projectList) {
+                    project.displayProject();
+                }
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -54,7 +78,7 @@ public class Supervisor extends User {
 
             switch (requestID) {
                 case 1:
-                    this.requestType = new RequestChangeSupervisor(null,null,null,null);
+                    this.requestType = new RequestChangeSupervisor(this,null,null,null);
                     break;
                 
                 default:
@@ -125,8 +149,10 @@ public class Supervisor extends User {
         try {
             if(pendingRequest.size() == 0){
                 System.out.println("There are no pending Request");
+                return; 
             }
-            DisplayRequest.displayPendingRequest(pendingRequest);
+            DisplayAll.displayPendingRequest(pendingRequest);
+            return; 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -135,13 +161,16 @@ public class Supervisor extends User {
 
     public int makeRequest(String recipientID, int projectID, String replacementSupervisorID) {
         try {
-            Project project = selectProject(projectID);
-            Supervisor replacementSupervisor = selectSupervisor(replacementSupervisorID);
-            FYPCoordinator FYPCoor = selectRecipient(recipientID);
-            if (project == null||FYPCoor==null||replacementSupervisor==null)
-                return 0;
+            Project project = Project.getProjectByID(projectID);
+            Supervisor replacementSupervisor = Supervisor.getSupervisorByID(replacementSupervisorID);
+            FYPCoordinator FYPCoor = FYPCoordinator.getCoordinatorByID(recipientID); 
+            
+            if (project == null||FYPCoor==null||replacementSupervisor==null){
+                System.out.println("NULL INPUT");
+                return 0;}
+
             if(requestType!=null){
-                requestType.create(this, FYPCoor, project, replacementSupervisor); // create request
+                this.requestType.create(this, FYPCoor, project, replacementSupervisor); 
                 if(requestType.sendRequest()==1){
                     return 1; // request sent
                 }
@@ -177,19 +206,47 @@ public class Supervisor extends User {
     }
     
     
-    public void displayAllSupervisor(){
+    public static void displayAllSupervisor(){
         try {
+            if(allSupervisor.size() == 0){
+                System.out.println("There are no supervisors");
+            }
+            else{
             for (Supervisor supervisor: allSupervisor){
+                System.out.println("----------------------------------");
                 String name = supervisor.getUserName();
                 String UserID = supervisor.getUserID();
                 String userEmail = supervisor.getEmail();
-                System.out.println("Name: " + name + ", UserID: " + UserID + "Email: " + userEmail + "\n");
+                System.out.println("Name: " + name + ", UserID: " + UserID + ", Email: " + userEmail + "\n");
+                System.out.println("----------------------------------");
             }
+        }
         } catch (Exception e) {
             System.out.println("An error occurred while trying to display the supervisors: " + e.getMessage());
         }
     }
     
+    public static void displayAllAvailableSupervisor(){
+        try {
+            int num = 0; 
+            for (Supervisor supervisor: allSupervisor){
+                if(supervisor.capReached() == false){
+                    System.out.println("----------------------------------");
+                    String name = supervisor.getUserName();
+                    String UserID = supervisor.getUserID();
+                    String userEmail = supervisor.getEmail();
+                    System.out.println("Name: " + name + ", UserID: " + UserID + ", Email: " + userEmail + "\n");
+                    System.out.println("----------------------------------");
+                    num++;
+                }
+            }
+            if(num == 0){
+                System.out.println("There are no available supervisors");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to display the supervisors: " + e.getMessage());
+        }
+    }
 
 
     public int makeAllProjectsAvailable(){
@@ -273,6 +330,7 @@ public class Supervisor extends User {
     
     public static int addToSupervisorList(Supervisor supervisor) {
         try {
+
             if (supervisor == null)
                 return 0;
             allSupervisor.add(supervisor);
@@ -342,8 +400,8 @@ public class Supervisor extends User {
     
     public int addStudentManaged(Student student) {
         try {
-            if (capReached())
-                return 0;
+            if (capReached()){
+                return 0;}
             numberOfProjectManaged++;
             studentManaged.add(student);
             return 1;
@@ -391,7 +449,7 @@ public class Supervisor extends User {
     public int addProject(Project project){
         try {
             if(project == null) return 0;
-            createProject(project.getProjectTitle());
+            projectList.add(project);
             return 1;
         } catch (Exception e) {
             System.out.println("An error occurred while trying to add a project: " + e.getMessage());
@@ -435,6 +493,17 @@ public class Supervisor extends User {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
+        }
+    }
+
+   //NEW METHOD
+    public boolean doSupervisorHaveProject(){
+        try{
+            if(projectList.isEmpty()) return false; //if the project list is empty, return false
+            else return true; //if the project list is not empty, return true
+        }catch(Exception e){
+            System.err.println("Error: " + e.getMessage());
+            return false;
         }
     }
 

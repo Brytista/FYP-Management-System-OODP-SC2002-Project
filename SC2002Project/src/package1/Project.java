@@ -17,6 +17,7 @@ public class Project implements ChangeProjectTitle {
             this.projectTitle = projectTitle;
             this.projectStatus = ProjectStatus.AVAILABLE;
             addToProjectList(this); // add this project to the project list
+            this.supervisor.addProject(this); 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -73,6 +74,23 @@ public class Project implements ChangeProjectTitle {
         return 1;
     }
 
+    //NEW METHOD
+    public boolean doesProjectBelongToSupervisor(int projectID){
+        try{
+            for(Project project : projectList){
+                if(project.getProjectID() == projectID){
+                    return true;
+                }
+            }
+            return false;
+        }catch(Exception e){
+            System.err.println("Error: " + e.getMessage());
+            return false;
+        } 
+    }
+
+    
+
 
     public Student getStudent() {
         return this.student;
@@ -99,15 +117,17 @@ public class Project implements ChangeProjectTitle {
     
     public void displayProject() {
         try {
+            System.out.println("");
             System.out.format("Project ID: %d\n", this.projectID);
             System.out.format("Supervisor Name: %s\n", this.supervisor.getUserName());
             System.out.format("Supervisor Email: %s\n", this.supervisor.getEmail());
             System.out.format("Project Title: %s\n", this.projectTitle);
             System.out.format("Project Status: %s\n", this.projectStatus);
-            if (this.projectStatus.equals(ProjectStatus.ALLOCATED)) {
+            if (this.projectStatus == ProjectStatus.ALLOCATED) {
                 System.out.format("Student Name: %s\n", this.student.getUserName());
                 System.out.format("Student Email: %s\n", this.student.getEmail());
             }
+            System.out.println("");
         } catch (Exception e) {
             System.out.println("An error has occurred while displaying the project: " + e.getMessage());
         }
@@ -126,7 +146,7 @@ public class Project implements ChangeProjectTitle {
     public static void displayAvailableProjects() {
         try {
             for (Project project : projectList) {
-                if (project.getProjectStatus().equals(ProjectStatus.AVAILABLE)) {
+                if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
                     project.displayProject();
                 }
             }
@@ -153,7 +173,7 @@ public class Project implements ChangeProjectTitle {
         try {
             List<Project> returnList = new ArrayList<Project>();
             for (Project project : projectList) {
-                if (project.getProjectStatus().equals(projectStatus)) {
+                if (project.getProjectStatus() == projectStatus) {
                     returnList.add(project);
                 }
             }
@@ -197,6 +217,7 @@ public class Project implements ChangeProjectTitle {
     
     public static int addToProjectList(Project project) {
         try {
+            if(Project.getProjectByID(project.getProjectID()) != null) return 0; // project already exists
             if (projectList.add(project)) {
                 return 1;
             }
@@ -226,7 +247,7 @@ public class Project implements ChangeProjectTitle {
         try {
             for (Project project : projectList) {
                 if (project.getSupervisor().getUserID().equals(supervisorID)) {
-                    if (!project.getProjectStatus().equals(ProjectStatus.ALLOCATED)) {
+                    if (!(project.getProjectStatus() == ProjectStatus.ALLOCATED)) {
                         project.changeProjectStatus(projectStatus);
                     }
                 }

@@ -8,10 +8,23 @@ public class FYPCoordinator extends Supervisor {
 
     public FYPCoordinator(String userID, String password, String name, String email) {
         super(userID, password, name, email);
+        addCoordinatorToList(this);
+    }
+
+    public static FYPCoordinator createFYPCoordinator(String userID, String password, String name, String email) {
         try {
-            addCoordinatorToList(this);
+            if(FYPCoordinator.getCoordinatorByID(userID)==null) {
+                FYPCoordinator newCoordinator = new FYPCoordinator(userID, password, name, email);
+                return newCoordinator;
+            }
+            else{
+                System.out.println("Error: User ID already exists");
+                return null;
+            }
+        
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
+            return null;
         }
     }
     
@@ -23,23 +36,13 @@ public class FYPCoordinator extends Supervisor {
         }
     }
     
-    public void generateProjectReportBySupervisorName(String supervisorName) {
-        try {
-            for (Project project : Project.projectList) {
-                if (project.supervisor.getUserName().equals(supervisorName))
-                    project.displayProject();
-            }
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-        }
-    }
-    
     public void generateProjectReportBySupervisorID(String supervisorID) {
         try {
-            for (Project project : Project.projectList) {
-                if (project.supervisor.getUserID().equals(supervisorID))
+            List<Project> projects2 = Project.getProjectBySupervisor(supervisorID); 
+            for (Project project : projects2) {
                     project.displayProject();
             }
+            return; 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -48,10 +51,11 @@ public class FYPCoordinator extends Supervisor {
     
     public void generateProjectReportByStatus(ProjectStatus status) {
         try {
-            for (Project project : Project.projectList) {
-                if (project.projectStatus.equals(status))
-                    project.displayProject();
+            List<Project> projects2 = Project.getProjectByStatus(status);
+            for (Project project : projects2) {
+                project.displayProject();
             }
+            return; 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -85,11 +89,21 @@ public class FYPCoordinator extends Supervisor {
     
     static public void displayAllCoordinators() {
         try {
-            for (FYPCoordinator coordinator : coordinators) {
-                System.out.println(coordinator.getUserID() + " " + coordinator.getUserName());
+            if(coordinators.size() == 0){
+                System.out.println("There are no FYP Coordinator");
             }
+            else{
+            for (FYPCoordinator coordinator: coordinators){
+                System.out.println("----------------------------------");
+                String name = coordinator.getUserName();
+                String UserID = coordinator.getUserID();
+                String userEmail = coordinator.getEmail();
+                System.out.println("Name: " + name + ", UserID: " + UserID + ", Email: " + userEmail + "\n");
+                System.out.println("----------------------------------");
+            }
+        }
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            System.out.println("An error occurred while trying to display the FYP Coordinators: " + e.getMessage());
         }
     }
     

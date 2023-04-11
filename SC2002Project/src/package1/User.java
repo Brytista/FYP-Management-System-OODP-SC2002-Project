@@ -129,18 +129,18 @@ abstract class User{
     public int addRequestToHistory(Request request) {
         try {
             requestHistory.add(request);
+            return 1; // return 1 if successful
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
 
-        return 1;
     }
 
     // displayRequestHistory(): displays the user's request history
     public void displayRequestHistory() {
         try {
-            DisplayRequest.displayRequestHistory(requestHistory);
+            DisplayAll.displayRequestHistory(requestHistory);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }

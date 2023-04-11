@@ -2,11 +2,14 @@ package package1;
 
 public abstract class SupervisorRequest extends Request {
     protected Supervisor sender; // the user who sent the request
-    protected FYPCoordinator recipient; // the user who will receive the request
+
     protected Supervisor replacementSupervisor; // the supervisor who will replace the current supervisor
     
     public SupervisorRequest(Supervisor sender, FYPCoordinator recipient, Project project, Supervisor replacementSupervisor) {
         super(sender, recipient, project);
+        this.sender = sender;
+        this.recipient = recipient;
+        this.project = project;
         this.replacementSupervisor = replacementSupervisor;
     }
     
@@ -50,6 +53,7 @@ public abstract class SupervisorRequest extends Request {
     public int create(Supervisor sender, FYPCoordinator recipient, Project project, Supervisor replacementSupervisor){
         try {
             if(sender == null || recipient == null || project == null || replacementSupervisor == null){
+                System.out.println("Error: " + "One or more of the parameters are null");
                 return 0;
             }
             this.sender = sender;
@@ -58,6 +62,10 @@ public abstract class SupervisorRequest extends Request {
             this.replacementSupervisor = replacementSupervisor;
             this.isReviewed = false;
             this.status = RequestStatus.PENDING;
+            if(this.recipient==null){
+                System.out.println("Error: " + "Recipient is null");
+                return 0;
+            }
             return 1;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

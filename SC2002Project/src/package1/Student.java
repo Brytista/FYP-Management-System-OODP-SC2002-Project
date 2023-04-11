@@ -10,6 +10,7 @@ public class Student extends User {
     private StudentRequest requestType;
     private StudentRequestWithString requestTypeWithString;
     private Project project;
+    private Boolean requestProject = false; // true if student has requested for a project
 
     private static List<Student> students = new ArrayList<>();
     private static List<String> availableRequests = new ArrayList<>(
@@ -23,11 +24,31 @@ public class Student extends User {
         addToStudentsList(this); // add student to students list
     }
 
+    public static Student createStudent(String userID, String password, String name, String email){
+        try {
+            if(Student.getStudentByID(userID)==null) {
+                Student newStudent = new Student(userID, password, name, email);
+                if (Student.addToStudentsList(newStudent) == 0) {
+                    return null;
+                }
+                return newStudent;
+            }
+            else{
+                System.out.println("Error: User ID already exists");
+                return null;
+            }
+        
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     // displayProjects(): displays all projects
     public void displayProjects() {
         try {
             if (this.isProjectAssigned()) {
-                System.out.println(project.getProjectID() + " " + project.getProjectTitle());
+                this.project.displayProject();
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -59,7 +80,31 @@ public class Student extends User {
         return 1;
     }
 
+    public int getProjectID(){
+        try {
+            if (this.isProjectAssigned()) {
+                return this.project.getProjectID();
+            }
+            else{
+                System.out.println("No Project Is Assigned!");
+                return -1; 
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+        return -1;
+    }
 
+    // ADD NEW METHODS HERE
+    public Boolean returnRequestProject(){
+        return this.requestProject; 
+    }
+
+
+    // ADD NEW METHODS HERE
+    public void setRequestProject(Boolean change){
+        this.requestProject = change;
+    }
 
     // chooseAndSetRequest(): sets the request type based on user selection
     @Override
@@ -68,15 +113,27 @@ public class Student extends User {
         try {
             switch (requestID) {
                 case 1:
-                    this.requestType = new RequestProjectAllocation(null, null, null);
+                    if(this.returnRequestProject()||this.isProjectAssigned()){
+                        System.out.println("Error: You have requested for a Project Allocation or a Project is already assigned to you");
+                        return 0;
+                    }
+                    this.requestType = new RequestProjectAllocation(this, null, null);
                     this.requestTypeWithString = null;
                     break;
                 case 2:
+                    if(this.isProjectAssigned()==false){
+                        System.out.println("Error: No project is assigned to you, so cannot change project title");
+                        return 0;
+                    }
                     this.requestType = null;
-                    this.requestTypeWithString = new RequestChangeProjectTitle(null, null, null, null);
+                    this.requestTypeWithString = new RequestChangeProjectTitle(this, null, null, null);
                     break;
                 case 3:
-                    this.requestType = new RequestDeregistration(null, null, null);
+                    if(this.isProjectAssigned()==false){
+                        System.out.println("Error: No project is assigned to you");
+                        return 0;
+                    }
+                    this.requestType = new RequestDeregistration(this, null, null);
                     this.requestTypeWithString = null;
                     break;
                 default:
@@ -88,7 +145,7 @@ public class Student extends User {
             return 0;
         }
 
-        return 1;
+        return 1; // request type set successfully
     }
 
     // getNewProjectTitle(): gets the new project title from the user
@@ -106,12 +163,12 @@ public class Student extends User {
 
 
     // makeRequest(): makes a request to a supervisor; 1 returned if successful,
-    public int makeRequest(String recipientID, int requestID, int projectID) {
+    public int makeRequest(String recipientID, int projectID) {
 
         try {
             Project project = selectProject(projectID);
             Supervisor recipient = selectRecipient(recipientID);
-
+            
             if (project == null || recipient == null) {
                 System.err.println("Error: Invalid project or recipient ID");
                 return 0;
@@ -120,7 +177,11 @@ public class Student extends User {
             if (this.requestType != null) {
 
                 this.requestType.create(this, recipient, project);
+                
                 if (this.requestType.sendRequest() == 1) {
+                    if(requestType instanceof RequestProjectAllocation){
+                        setRequestProject(true);
+                    }
                     return 1;
                 } // request is sent
                 else {
@@ -162,6 +223,9 @@ private Project selectProject(int projectID) {
 // selectRecipient(): returns the supervisor with the selected ID
 private Supervisor selectRecipient(String supervisorID) {
     try {
+        if(Supervisor.getSupervisorByID(supervisorID)==null){
+            return FYPCoordinator.getCoordinatorByID(supervisorID);
+        };
         return Supervisor.getSupervisorByID(supervisorID);
     } catch (Exception e) {
         System.err.println("Error: " + e.getMessage());
@@ -193,12 +257,8 @@ public boolean isProjectAssigned() {
     // changeProject(): changes the student's project; 1 returned if successful
     public int changeProject(Project newProject) {
         try {
-            if (!this.isProjectAssigned()) {
-              throw new Exception("Error: Student has no assigned project");
-        } else {
-            project = newProject;
-        }
-        return 1;
+            this.project = newProject;
+            return 1;
     } catch (Exception e) {
         System.err.println(e.getMessage());
         return 0;

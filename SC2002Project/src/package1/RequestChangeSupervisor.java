@@ -5,33 +5,60 @@ public class RequestChangeSupervisor extends SupervisorRequest {
     public RequestChangeSupervisor(Supervisor sender, FYPCoordinator recipient, Project project,
             Supervisor replacementSupervisor) {
         super(sender, recipient, project, replacementSupervisor);
-        //TODO Auto-generated constructor stub
+        this.sender = sender;
+        this.recipient = recipient;
+        this.project = project;
+        this.replacementSupervisor = replacementSupervisor;
     }
     @Override
     public int approve() {
         try {
-            if(sender == null || recipient == null || replacementSupervisor == null || project == null || project.getStudent() == null){
+            if(sender == null || recipient == null || replacementSupervisor == null || project == null){
+                System.out.println("Cannot approve request as sender, recipient, replacement supervisor or project is null");
                 return 0; // failure, sender or recipient is null
             }
+
+            if(project.getProjectStatus()==ProjectStatus.ALLOCATED){
             if(replacementSupervisor.capReached()){
                 System.out.println("Cannot approve request as replacement supervisor has reached cap");
                 this.changeStatus(RequestStatus.REJECTED);
                 return 0; 
             }
             if(sender.capReached()){
-                sender.makeAllProjectsAvailable(); // make all projects unavailable if the supervisor has reached his cap
+                if(sender.makeAllProjectsAvailable()==0){return 0;} // make all projects available if the supervisor who send the request reached his cap before
             }
-            project.changeSupervisor(replacementSupervisor);
-            sender.removeStudentManaged(project.getStudent());
-            sender.removeProject(project);
-            replacementSupervisor.addStudentManaged(project.getStudent()); //This assumed that addStudentManaged will add the variable numberOfProjectManaged and add the student to the list of students managed
-            replacementSupervisor.addProject(project); //This assumes that add project would add the project directly to project list
-            recipient.removePendingRequest(this); 
-            recipient.addRequestToHistory(this);
+            if(
+                project.changeSupervisor(replacementSupervisor)==0||
+                sender.removeStudentManaged(project.getStudent())==0||
+                sender.removeProject(project)==0||
+                Project.addToProjectList(project)==0|| // add the project back to the project list
+                replacementSupervisor.addStudentManaged(project.getStudent())==0||
+                replacementSupervisor.addProject(project)==0||
+                recipient.removePendingRequest(this)==0||
+                recipient.addRequestToHistory(this)==0||
+                this.makeIsReviewed()==0
+            ){ System.err.println("Some steps in the project allocation is not successful");
+                return 0; 
+            }
             if(replacementSupervisor.capReached()){
-                replacementSupervisor.makeAllProjectsUnavailable(); // make all projects unavailable if the supervisor has reached his cap
+                if(replacementSupervisor.makeAllProjectsUnavailable()==0){return 0;}; // make all projects unavailable if the supervisor has reached his cap
             }
-            this.changeStatus(RequestStatus.APPROVED);
+        }
+            else{
+                if(
+                project.changeSupervisor(replacementSupervisor)==0||
+                sender.removeProject(project)==0||
+                Project.addToProjectList(project)==0|| // add the project back to the project list
+                replacementSupervisor.addProject(project)==0||
+                recipient.removePendingRequest(this)==0||
+                recipient.addRequestToHistory(this)==0||
+                this.makeIsReviewed()==0
+            ){ 
+                System.err.println("Some steps in the project allocation is not successful");
+                return 0; 
+            }
+            }
+            if(this.changeStatus(RequestStatus.APPROVED)==0){return 0;}
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -42,9 +69,12 @@ public class RequestChangeSupervisor extends SupervisorRequest {
     @Override
     public int reject() {
         try {
-            recipient.removePendingRequest(this);
-            recipient.addRequestToHistory(this);
-            this.changeStatus(RequestStatus.REJECTED);
+            if(
+                recipient.removePendingRequest(this)==0||
+                recipient.addRequestToHistory(this)==0||
+                this.changeStatus(RequestStatus.REJECTED)==0||
+                this.makeIsReviewed()==0
+            ){return 0;}
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -58,9 +88,11 @@ public class RequestChangeSupervisor extends SupervisorRequest {
             if (sender == null || recipient == null) {
                 return 0; // failure, sender or recipient is null
             }
-            sender.addRequestToHistory(this);
-            recipient.addPendingRequest(this);
-            this.changeStatus(RequestStatus.PENDING); // change the status of the request to pending
+            if(
+                sender.addRequestToHistory(this)==0||
+                recipient.addPendingRequest(this)==0||
+                this.changeStatus(RequestStatus.PENDING)==0 // change the status of the request to pending
+            ){return 0;}
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

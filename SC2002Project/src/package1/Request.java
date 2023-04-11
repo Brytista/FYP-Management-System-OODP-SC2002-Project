@@ -31,7 +31,7 @@ public abstract class Request {
         return 0; // failure
     }
     public void displayProject() {
-        System.out.println("Project:"+ project);
+        System.out.println("Project:"+ project.getProjectTitle());
     }
     public void printRequest() {
         System.out.println("Request from " + sender.getUserID() + " to " + recipient.getUserID() + " with status " + this.isReviewed);
@@ -51,6 +51,7 @@ public abstract class Request {
     public void displaySender(){
         System.out.println("Sender:"+ sender.getUserID());
     }
+
     public int changeSender(User sender){
         try {
             if (!(sender instanceof User)) {
@@ -65,9 +66,14 @@ public abstract class Request {
     }
     
 
-    public void displayRecipient(){
-        System.out.println("Recipient:"+ recipient.getUserID());
+    public void displayRecipient() {
+        try {
+            System.out.println("Recipient: " + this.recipient.getUserID());
+        } catch (NullPointerException e) {
+            System.out.println("Error: recipient is null.");
+        }
     }
+    
     
     public int changeRecipient(Supervisor recipient){
         try {

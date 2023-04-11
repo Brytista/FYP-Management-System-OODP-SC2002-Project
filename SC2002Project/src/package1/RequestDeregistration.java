@@ -8,16 +8,19 @@ public class RequestDeregistration extends StudentRequest {
     @Override
     public int approve() {
         try {
-            if(recipient.capReached()){
-                recipient.makeAllProjectsAvailable(); // make all projects unavailable if the supervisor has reached his cap
+            Supervisor supervisor = project.getSupervisor();
+            if(supervisor.capReached()){
+                supervisor.makeAllProjectsAvailable(); // make all projects unavailable if the supervisor has reached his cap
             }
-            project.changeProjectStatus(ProjectStatus.AVAILABLE);
-            recipient.removePendingRequest(this);
-            recipient.addRequestToHistory(this);
-            sender.removeProject(); 
-            recipient.removeStudentManaged(sender);
-            project.removeStudent(); 
-            this.changeStatus(RequestStatus.APPROVED);
+            if(
+                project.changeProjectStatus(ProjectStatus.AVAILABLE) ==0 ||
+                recipient.removePendingRequest(this) == 0 ||
+                recipient.addRequestToHistory(this) == 0 ||
+                sender.removeProject() == 0 ||
+                supervisor.removeStudentManaged(sender) == 0 ||
+                project.removeStudent() == 0 ||
+                this.changeStatus(RequestStatus.APPROVED) == 0 ||
+                this.makeIsReviewed() == 0) {return 0;}
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -28,9 +31,12 @@ public class RequestDeregistration extends StudentRequest {
     @Override
     public int reject() {
         try {
-            recipient.removePendingRequest(this);
-            recipient.addRequestToHistory(this);
-            this.changeStatus(RequestStatus.REJECTED);
+            if(
+                recipient.removePendingRequest(this) == 0 ||
+                recipient.addRequestToHistory(this) == 0 ||
+                this.changeStatus(RequestStatus.REJECTED) == 0 ||
+                this.makeIsReviewed() == 0
+            ){return 0;}
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

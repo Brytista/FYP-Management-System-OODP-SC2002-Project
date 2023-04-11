@@ -9,15 +9,18 @@ public class RequestProjectAllocation extends StudentRequest {
     @Override
 public int approve() {
     try {
-        sender.changeProject(project);
-        project.changeProjectStatus(ProjectStatus.ALLOCATED);
-        recipient.removePendingRequest(this);
-        recipient.addRequestToHistory(this);
-        recipient.addStudentManaged(sender);
-        project.changeStudent(sender);
-        if(recipient.capReached()){
-            recipient.makeAllProjectsUnavailable(); // make all projects unavailable if the supervisor has reached his cap
-            return 0;
+        Supervisor supervisor = project.getSupervisor(); // get the supervisor of the project
+        if(sender.changeProject(project)==0 || project.changeProjectStatus(ProjectStatus.ALLOCATED) == 0 
+        || recipient.removePendingRequest(this) == 0 || recipient.addRequestToHistory(this) == 0 
+        || supervisor.addStudentManaged(sender) == 0 
+        || project.changeStudent(sender) == 0 
+        || this.changeStatus(RequestStatus.APPROVED) == 0 
+        || this.makeIsReviewed()==0) {return 0;
+        }
+        sender.setRequestProject(false);
+        if(supervisor.capReached()){
+            supervisor.makeAllProjectsUnavailable(); // make all projects unavailable if the supervisor has reached his cap
+            return 1;
         }
         return 1;
     } catch (Exception e) {
@@ -29,9 +32,14 @@ public int approve() {
 @Override
 public int reject() {
     try {
-        project.changeProjectStatus(ProjectStatus.AVAILABLE);
-        recipient.removePendingRequest(this);
-        recipient.addRequestToHistory(this);
+        if(project.changeProjectStatus(ProjectStatus.AVAILABLE)==0||
+        recipient.removePendingRequest(this)==0||
+        recipient.addRequestToHistory(this)==0||
+        this.changeStatus(RequestStatus.REJECTED)==0||
+        this.makeIsReviewed()==0) {return 0;}
+
+        sender.setRequestProject(false);
+        
         return 1;
     } catch (Exception e) {
         System.err.println("Error: " + e.getMessage());
