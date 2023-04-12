@@ -122,6 +122,9 @@ public class FYPCoordinator extends Supervisor {
         }
     }
     
+    static public List<FYPCoordinator> getFYPCoordinators() {
+        return coordinators;
+    }
 
     static public int addInitialCoordinators(List<FYPCoordinator> coordList) {
         try {
@@ -130,6 +133,18 @@ public class FYPCoordinator extends Supervisor {
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+
+    static public int assignFYPCoordinatorsList(List<FYPCoordinator> coordList) {
+        try {
+            coordinators = coordList;
+            System.out.println("FYPCoord list assigned with length " + coordinators.size() + ".");
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the FYP Coordinator list: " + e.getMessage());
             return 0;
         }
 

@@ -18,7 +18,7 @@ public class Supervisor extends User {
 
     public Supervisor(String userID, String password, String name, String email){
         super(userID, password, name, email);
-            addToSupervisorList(this); 
+        addToSupervisorList(this); 
         
     }
 
@@ -326,6 +326,22 @@ public class Supervisor extends User {
             return 0;
         }
     }
+
+    public static List<Supervisor> getSupervisors() {
+        return allSupervisor;
+    }
+
+    public static int assignSupervisorsList(List<Supervisor> supervisorsList) {
+        try {
+            allSupervisor = supervisorsList;
+            System.out.println("Supervisor list assigned with length " + allSupervisor.size() + ".");
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the supervisor list: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
     
     public static int addToSupervisorList(Supervisor supervisor) {
         try {
@@ -395,6 +411,17 @@ public class Supervisor extends User {
             System.out.println("An error occurred while trying to determine if the project belongs to the supervisor: " + e.getMessage());
             return false;
         }
+    }
+
+    public int assignStudentManaged(List<Student> students) {
+        try {
+            studentManaged = students;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the student managed: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
     }
     
     public int addStudentManaged(Student student) {

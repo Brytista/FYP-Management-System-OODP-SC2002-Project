@@ -22,35 +22,35 @@ public class Student extends User {
     // Constructor
     public Student(String userID, String password, String name, String email) {
         super(userID, password, name, email);
-        addToStudentsList(this); // add student to students list
+        // addToStudentsList(this); // add student to students list
     }
 
-    public int setIsDeregistered(Boolean change){
-        if(change == null) return 0; // failure (change cannot be null
+    public int setIsDeregistered(Boolean change) {
+        if (change == null)
+            return 0; // failure (change cannot be null
         this.isDeregistered = change;
-        return 1; 
+        return 1;
     }
 
-    public Boolean getIsDeregistered(){
+    public Boolean getIsDeregistered() {
         return this.isDeregistered;
     }
 
-    public static Student createStudent(String userID, String password, String name, String email){
+    public static Student createStudent(String userID, String password, String name, String email) {
         try {
-            if(Student.getStudentByID(userID)==null) {
+            if (Student.getStudentByID(userID) == null) {
                 Student newStudent = new Student(userID, password, name, email);
                 if (Student.addToStudentsList(newStudent) == 0) {
                     return null;
                 }
                 return newStudent;
-            }
-            else{
+            } else {
                 System.out.println("--------------------");
                 System.out.println("Error: User ID already exists");
                 System.out.println("--------------------");
                 return null;
             }
-        
+
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return null;
@@ -62,8 +62,7 @@ public class Student extends User {
         try {
             if (this.isProjectAssigned()) {
                 this.project.displayProject();
-            }
-            else{
+            } else {
                 System.out.println("--------------------");
                 System.out.println("You have not registered a project.");
                 System.out.println("--------------------");
@@ -99,30 +98,27 @@ public class Student extends User {
         return 1;
     }
 
-    public int getProjectID(){
+    public int getProjectID() {
         try {
             if (this.isProjectAssigned()) {
                 return this.project.getProjectID();
-            }
-            else{
+            } else {
                 System.out.println("No Project Is Assigned!");
-                return -1; 
+                return -1;
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
         return -1;
     }
-    
 
     // ADD NEW METHODS HERE
-    public Boolean returnRequestProject(){
-        return this.requestProject; 
+    public Boolean returnRequestProject() {
+        return this.requestProject;
     }
 
-
     // ADD NEW METHODS HERE
-    public void setRequestProject(Boolean change){
+    public void setRequestProject(Boolean change) {
         this.requestProject = change;
     }
 
@@ -133,15 +129,16 @@ public class Student extends User {
         try {
             switch (requestID) {
                 case 1:
-                    if(this.returnRequestProject()||this.isProjectAssigned()){
-                        System.out.println("Error: You have requested for a Project Allocation or a Project is already assigned to you");
+                    if (this.returnRequestProject() || this.isProjectAssigned()) {
+                        System.out.println(
+                                "Error: You have requested for a Project Allocation or a Project is already assigned to you");
                         return 0;
                     }
                     this.requestType = new RequestProjectAllocation(this, null, null);
                     this.requestTypeWithString = null;
                     break;
                 case 2:
-                    if(this.isProjectAssigned()==false){
+                    if (this.isProjectAssigned() == false) {
                         System.out.println("Error: No project is assigned to you, so cannot change project title");
                         return 0;
                     }
@@ -149,7 +146,7 @@ public class Student extends User {
                     this.requestTypeWithString = new RequestChangeProjectTitle(this, null, null, null);
                     break;
                 case 3:
-                    if(this.isProjectAssigned()==false){
+                    if (this.isProjectAssigned() == false) {
                         System.out.println("Error: No project is assigned to you");
                         return 0;
                     }
@@ -169,8 +166,8 @@ public class Student extends User {
     }
 
     // getNewProjectTitle(): gets the new project title from the user
-       // getNewProjectTitle(): gets the new project title from the user
-       public String getNewProjectTitle() {
+    // getNewProjectTitle(): gets the new project title from the user
+    public String getNewProjectTitle() {
         try {
             System.out.println("Enter new project title: ");
             String newProjectTitle = scanner.nextLine();
@@ -181,14 +178,13 @@ public class Student extends User {
         }
     }
 
-
     // makeRequest(): makes a request to a supervisor; 1 returned if successful,
     public int makeRequest(String recipientID, int projectID) {
 
         try {
             Project project = selectProject(projectID);
             Supervisor recipient = selectRecipient(recipientID);
-            
+
             if (project == null || recipient == null) {
                 System.err.println("Error: Invalid project or recipient ID");
                 return 0;
@@ -197,9 +193,9 @@ public class Student extends User {
             if (this.requestType != null) {
 
                 this.requestType.create(this, recipient, project);
-                
+
                 if (this.requestType.sendRequest() == 1) {
-                    if(requestType instanceof RequestProjectAllocation){
+                    if (requestType instanceof RequestProjectAllocation) {
                         setRequestProject(true);
                     }
                     return 1;
@@ -231,70 +227,68 @@ public class Student extends User {
     }
 
     // selectProject(): returns the project with the selected ID
-private Project selectProject(int projectID) {
-    try {
-        return Project.getProjectByID(projectID);
-    } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
-        return null;
-    }
-}
-
-// selectRecipient(): returns the supervisor with the selected ID
-private Supervisor selectRecipient(String supervisorID) {
-    try {
-        if(Supervisor.getSupervisorByID(supervisorID)==null){
-            return FYPCoordinator.getCoordinatorByID(supervisorID);
-        };
-        return Supervisor.getSupervisorByID(supervisorID);
-    } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
-        return null;
-    }
-}
-
-// viewAllProjects(): displays all available projects
-public void viewAllProjects() {
-    try {
-        if(this.getIsDeregistered()){
-            System.out.println("--------------------");
-            System.out.println("You are not allowed to make selection again as you deregistered your FYP");
-            System.out.println("--------------------");
-            return;
+    private Project selectProject(int projectID) {
+        try {
+            return Project.getProjectByID(projectID);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return null;
         }
-        Project.displayAvailableProjects();
-    } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
     }
-}
 
-// isProjectAssigned(): returns true if the student has an assigned project
-public boolean isProjectAssigned() {
-    try {
-        return this.project != null;
-    } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
-        return false;
+    // selectRecipient(): returns the supervisor with the selected ID
+    private Supervisor selectRecipient(String supervisorID) {
+        try {
+            if (Supervisor.getSupervisorByID(supervisorID) == null) {
+                return FYPCoordinator.getCoordinatorByID(supervisorID);
+            }
+            ;
+            return Supervisor.getSupervisorByID(supervisorID);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return null;
+        }
     }
-}
 
+    // viewAllProjects(): displays all available projects
+    public void viewAllProjects() {
+        try {
+            if (this.getIsDeregistered()) {
+                System.out.println("--------------------");
+                System.out.println("You are not allowed to make selection again as you deregistered your FYP");
+                System.out.println("--------------------");
+                return;
+            }
+            Project.displayAvailableProjects();
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
 
+    // isProjectAssigned(): returns true if the student has an assigned project
+    public boolean isProjectAssigned() {
+        try {
+            return this.project != null;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            return false;
+        }
+    }
 
     // changeProject(): changes the student's project; 1 returned if successful
     public int changeProject(Project newProject) {
         try {
             this.project = newProject;
             return 1;
-    } catch (Exception e) {
-        System.err.println(e.getMessage());
-        return 0;
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return 0;
+        }
     }
-}
 
-    public Project getProject(){
+    public Project getProject() {
         return this.project;
     }
-
 
     // removeProject(): removes the student's project
     public int removeProject() {
@@ -308,53 +302,53 @@ public boolean isProjectAssigned() {
         return 1;
     }
 
-        // displayAllStudents(): displays all students
-        public static void displayAllStudents() {
-            try {
-                for (Student student : students) {
-                    System.out.println("Student ID: " + student.getUserID());
-                    System.out.println("Student Name: " + student.getUserName());
-                    System.out.println("Student Email: " + student.getEmail());
-            }
-            } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
-            }
-        }
+    public static List<Student> getStudents() {
+        return students;
+    }
 
-    
-        // getStudentByName(): returns the student(s) with the selected name
-        public static List<Student> getStudentByName(String name) {
-            List<Student> returnStudents = new ArrayList<>();
-            try {
-                for (Student student : students) {
-                    if (student.getUserName().equals(name)) {
-                        returnStudents.add(student);
-                    }
-                }
-            } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
+    // displayAllStudents(): displays all students
+    public static void displayAllStudents() {
+        try {
+            for (Student student : students) {
+                System.out.println("Student ID: " + student.getUserID());
+                System.out.println("Student Name: " + student.getUserName());
+                System.out.println("Student Email: " + student.getEmail());
             }
-            return returnStudents;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
-    
-    
-        // getStudentByID(): returns the student with the selected ID
-        public static Student getStudentByID(String userID) {
-            Student returnStudent = null;
-            try {
-                for (Student student : students) {
-                    if (student.getUserID().equals(userID)) {
-                        returnStudent = student;
-                        break;
-                    }
+    }
+
+    // getStudentByName(): returns the student(s) with the selected name
+    public static List<Student> getStudentByName(String name) {
+        List<Student> returnStudents = new ArrayList<>();
+        try {
+            for (Student student : students) {
+                if (student.getUserName().equals(name)) {
+                    returnStudents.add(student);
                 }
-            } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
             }
-            return returnStudent;
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
-    
-    
+        return returnStudents;
+    }
+
+    // getStudentByID(): returns the student with the selected ID
+    public static Student getStudentByID(String userID) {
+        Student returnStudent = null;
+        try {
+            for (Student student : students) {
+                if (student.getUserID().equals(userID)) {
+                    returnStudent = student;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+        return returnStudent;
+    }
 
     // addInitialStudents(): adds a list of students to the students List object
     public int addInitialStudents(List<Student> studentsList) {
@@ -365,6 +359,19 @@ public boolean isProjectAssigned() {
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+
+    // assignStudentsList(): assigns a list of students to the students List object
+    public static int assignStudentsList(List<Student> studentsList) {
+        try {
+            students = studentsList;
+            System.out.println("Students list assigned with length " + students.size() + ".");
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the student list: " + e.getMessage());
             return 0;
         }
 
@@ -401,8 +408,6 @@ public boolean isProjectAssigned() {
     public boolean isStudent() {
         return true;
     }
-
-    
 
     public static int loginStudent(String userID, String password) {
         try {
