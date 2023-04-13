@@ -53,8 +53,10 @@ public class Student extends User {
      */
     public Student(String userID, String password, String name, String email) {
         super(userID, password, name, email);
-        addToStudentsList(this); // add student to students list
+        // addToStudentsList(this); // add student to students list
     }
+
+
 
     /**
      * Sets the student's isDeregistered status to the specified value.
@@ -65,7 +67,7 @@ public class Student extends User {
     public int setIsDeregistered(Boolean change){
         if(change == null) return 0; // failure (change cannot be null)
         this.isDeregistered = change;
-        return 1; 
+        return 1;
     }
 
     /**
@@ -90,20 +92,19 @@ public class Student extends User {
      */
     public static Student createStudent(String userID, String password, String name, String email){
         try {
-            if(Student.getStudentByID(userID)==null) {
+            if (Student.getStudentByID(userID) == null) {
                 Student newStudent = new Student(userID, password, name, email);
                 if (Student.addToStudentsList(newStudent) == 0) {
                     return null;
                 }
                 return newStudent;
-            }
-            else{
+            } else {
                 System.out.println("--------------------");
                 System.out.println("Error: User ID already exists");
                 System.out.println("--------------------");
                 return null;
             }
-        
+
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return null;
@@ -118,8 +119,7 @@ public class Student extends User {
         try {
             if (this.isProjectAssigned()) {
                 this.project.displayProject();
-            }
-            else{
+            } else {
                 System.out.println("--------------------");
                 System.out.println("You have not registered a project.");
                 System.out.println("--------------------");
@@ -163,6 +163,7 @@ public class Student extends User {
         return 1;
     }
 
+
     /**
      * Returns the project ID for the given student if they have an assigned project.
      * @return Returns the project ID if the student has an assigned project, or -1 if no project is assigned or an exception occurs.
@@ -171,16 +172,16 @@ public class Student extends User {
         try {
             if (this.isProjectAssigned()) {
                 return this.project.getProjectID();
-            }
-            else{
+            } else {
                 System.out.println("No Project Is Assigned!");
-                return -1; 
+                return -1;
             }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
         return -1;
     }
+
 
     
    /**
@@ -212,15 +213,16 @@ public class Student extends User {
         try {
             switch (requestID) {
                 case 1:
-                    if(this.returnRequestProject()||this.isProjectAssigned()){
-                        System.out.println("Error: You have requested for a Project Allocation or a Project is already assigned to you");
+                    if (this.returnRequestProject() || this.isProjectAssigned()) {
+                        System.out.println(
+                                "Error: You have requested for a Project Allocation or a Project is already assigned to you");
                         return 0;
                     }
                     this.requestType = new RequestProjectAllocation(this, null, null);
                     this.requestTypeWithString = null;
                     break;
                 case 2:
-                    if(this.isProjectAssigned()==false){
+                    if (this.isProjectAssigned() == false) {
                         System.out.println("Error: No project is assigned to you, so cannot change project title");
                         return 0;
                     }
@@ -228,7 +230,7 @@ public class Student extends User {
                     this.requestTypeWithString = new RequestChangeProjectTitle(this, null, null, null);
                     break;
                 case 3:
-                    if(this.isProjectAssigned()==false){
+                    if (this.isProjectAssigned() == false) {
                         System.out.println("Error: No project is assigned to you");
                         return 0;
                     }
@@ -247,6 +249,7 @@ public class Student extends User {
     }
 
 
+
     /**
      * Gets the new project title from the user.
      * 
@@ -262,6 +265,7 @@ public class Student extends User {
             return null;
         }
     }
+
 
     /**
      * Makes a request to a supervisor.
@@ -311,6 +315,7 @@ public class Student extends User {
     }
 
 
+
     /**
      * selectProject(): Returns the project with the selected ID
      * 
@@ -320,11 +325,13 @@ public class Student extends User {
     private Project selectProject(int projectID) {
         try {
             return Project.getProjectByID(projectID);
+
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return null;
         }
     }
+
 
     /**
      * selectRecipient(): Returns the supervisor with the selected ID
@@ -375,6 +382,7 @@ public class Student extends User {
         }
     }
 
+
     /**
      * Changes the student's project.
      *
@@ -391,6 +399,7 @@ public class Student extends User {
         }
     }
 
+
     /**
      * Returns the project assigned to the student.
      *
@@ -399,6 +408,7 @@ public class Student extends User {
     public Project getProject() {
         return this.project;
     }
+
 
     /**
      * Removes the project assigned to the student.
@@ -416,6 +426,12 @@ public class Student extends User {
         return 1;
     }
 
+
+    public static List<Student> getStudents() {
+        return students;
+    }
+
+
     /**
      * Displays all students in the system.
      */
@@ -430,6 +446,7 @@ public class Student extends User {
             System.err.println("Error: " + e.getMessage());
         }
     }
+
     
     /**
      * Returns the student(s) with the selected name.
@@ -449,6 +466,7 @@ public class Student extends User {
         }
         return returnStudents;
     }
+
 
     /**
      * Returns the student with the selected ID.
@@ -470,6 +488,7 @@ public class Student extends User {
         return returnStudent;
     }
 
+
     /**
      * Adds a list of students to the students List object.
      * @param studentsList the list of students to add
@@ -484,6 +503,19 @@ public class Student extends User {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
+        return 1;
+    }
+
+    // assignStudentsList(): assigns a list of students to the students List object
+    public static int assignStudentsList(List<Student> studentsList) {
+        try {
+            students = studentsList;
+            System.out.println("Students list assigned with length " + students.size() + ".");
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the student list: " + e.getMessage());
+            return 0;
+        }
+
         return 1;
     }
 
@@ -528,6 +560,7 @@ public class Student extends User {
     public boolean isStudent() {
         return true;
     }
+
 
     /**
      * Attempts to log in a student with the given user ID and password

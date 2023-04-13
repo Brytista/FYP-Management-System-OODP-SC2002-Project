@@ -6,6 +6,7 @@ public abstract class Request {
     protected boolean isReviewed; // the status of the request
     protected Project project; // the project the request is about
     protected RequestStatus status; // the status of the request
+
     public Request(User sender, Supervisor recipient, Project project) {
         this.sender = sender;
         this.recipient = recipient;
@@ -13,6 +14,7 @@ public abstract class Request {
         this.project = project;
         this.status = RequestStatus.PENDING; // default value
     }
+
     public int changeStatus(RequestStatus status) {
         if (status == null) {
             return 0; // failure, status is null
@@ -20,39 +22,50 @@ public abstract class Request {
         this.status = status;
         return 1; // success
     }
+
     public void displayStatus() {
-        System.out.println("Status:"+ status);
+        System.out.println("Status:" + status);
     }
+
     public int changeProject(Project project) {
-        if(Project.isProject(project)){
+        if (Project.isProject(project)) {
             this.project = project;
             return 1; // success
         }
         return 0; // failure
     }
+
     public void displayProject() {
-        System.out.println("Project:"+ project.getProjectTitle());
-    }
-    public void printRequest() {
-        System.out.println("Request from " + sender.getUserID() + " to " + recipient.getUserID() + " with status " + this.isReviewed);
-    }
-    public int approve(){return 0;} //by Concrete Class
-    public int reject(){return 0;} // by Concrete Class
-    
-    public void displayIsReviewed(){
-        System.out.println("IsReviewed:"+ isReviewed);
+        System.out.println("Project:" + project.getProjectTitle());
     }
 
-    public int makeIsReviewed(){
+    public void printRequest() {
+        System.out.println("Request from " + sender.getUserID() + " to " + recipient.getUserID() + " with status "
+                + this.isReviewed);
+    }
+
+    public int approve() {
+        return 0;
+    } // by Concrete Class
+
+    public int reject() {
+        return 0;
+    } // by Concrete Class
+
+    public void displayIsReviewed() {
+        System.out.println("IsReviewed:" + isReviewed);
+    }
+
+    public int makeIsReviewed() {
         this.isReviewed = true;
         return 1; // success
     }
 
-    public void displaySender(){
-        System.out.println("Sender:"+ sender.getUserID());
+    public void displaySender() {
+        System.out.println("Sender:" + sender.getUserID());
     }
 
-    public int changeSender(User sender){
+    public int changeSender(User sender) {
         try {
             if (!(sender instanceof User)) {
                 return 0; // failure, not an instance of Sender or its subclasses
@@ -64,7 +77,6 @@ public abstract class Request {
         }
         return 1; // success
     }
-    
 
     public void displayRecipient() {
         try {
@@ -73,11 +85,10 @@ public abstract class Request {
             System.out.println("Error: recipient is null.");
         }
     }
-    
-    
-    public int changeRecipient(Supervisor recipient){
+
+    public int changeRecipient(Supervisor recipient) {
         try {
-            //Make a check to see if the user is a supervisor
+            // Make a check to see if the user is a supervisor
             if (recipient == null) {
                 return 0; // failure, recipient is null
             }
@@ -86,13 +97,13 @@ public abstract class Request {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-    
+
         return 1; // success
     }
-    
-    public int sendRequest(){
+
+    public int sendRequest() {
         try {
-            //Send the request to the recipient
+            // Send the request to the recipient
             if (sender == null || recipient == null) {
                 return 0; // failure, sender or recipient is null
             }
@@ -102,9 +113,10 @@ public abstract class Request {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-    
-        return 1; // success
-    } 
 
-    public void displayRequestDescription(){}
+        return 1; // success
+    }
+
+    public void displayRequestDescription() {
+    }
 }

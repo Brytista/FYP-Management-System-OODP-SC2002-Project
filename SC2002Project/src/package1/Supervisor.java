@@ -508,6 +508,24 @@ public class Supervisor extends User {
         }
     }
 
+  //NEW METHOD
+    public static List<Supervisor> getSupervisors() {
+        return allSupervisor;
+    }
+    
+    //NEW METHOD
+    public static int assignSupervisorsList(List<Supervisor> supervisorsList) {
+        try {
+            allSupervisor = supervisorsList;
+            System.out.println("Supervisor list assigned with length " + allSupervisor.size() + ".");
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the supervisor list: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+
     
     /**
      * Adds a supervisor to the list of all supervisors.
@@ -603,6 +621,19 @@ public class Supervisor extends User {
             return false;
         }
     }
+
+
+    public int assignStudentManaged(List<Student> students) {
+        try {
+            studentManaged = students;
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the student managed: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+    
 
     /**
      * Adds the specified student to the list of students managed by the supervisor and increments the number of projects managed.

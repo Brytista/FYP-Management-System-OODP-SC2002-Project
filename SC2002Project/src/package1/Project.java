@@ -1,4 +1,5 @@
 package package1;
+
 import java.util.List;
 import java.util.ArrayList;
 /**
@@ -46,7 +47,7 @@ public class Project implements ChangeProjectTitle {
             this.projectTitle = projectTitle;
             this.projectStatus = ProjectStatus.AVAILABLE;
             addToProjectList(this); // add this project to the project list
-            this.supervisor.addProject(this); 
+            this.supervisor.addProject(this);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -69,7 +70,8 @@ public class Project implements ChangeProjectTitle {
      * @return 1 if the project ID was changed successfully, 0 otherwise
      */
     public int changeProjectID(int projectID) {
-        if(projectID<0) return 0;
+        if (projectID < 0)
+            return 0;
         this.projectID = projectID;
         return 1;
     }
@@ -91,7 +93,8 @@ public class Project implements ChangeProjectTitle {
      * @return 1 if the supervisor was changed successfully, 0 otherwise
      */
     public int changeSupervisor(Supervisor supervisor) {
-        if(supervisor==null) return 0;
+        if (supervisor == null)
+            return 0;
         this.supervisor = supervisor;
         return 1;
     }
@@ -114,7 +117,8 @@ public class Project implements ChangeProjectTitle {
      */
     public int changeProjectTitle(String projectTitle) {
         try {
-            if(projectTitle==null || projectTitle.length()==0) return 0;
+            if (projectTitle == null || projectTitle.length() == 0)
+                return 0;
             this.projectTitle = projectTitle;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -141,7 +145,8 @@ public class Project implements ChangeProjectTitle {
      */
     public int changeProjectStatus(ProjectStatus projectStatus) {
         try {
-            if(projectStatus==null) return 0;
+            if (projectStatus == null)
+                return 0;
             this.projectStatus = projectStatus;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -149,6 +154,13 @@ public class Project implements ChangeProjectTitle {
         }
         return 1;
     }
+
+
+    // NEW METHOD
+    public boolean doesProjectBelongToSupervisor(int projectID) {
+        try {
+            for (Project project : projectList) {
+                if (project.getProjectID() == projectID) {
 
     /**
      * Checks if the project with the specified project ID belongs to the supervisor of this project.
@@ -164,11 +176,12 @@ public class Project implements ChangeProjectTitle {
                 }
             }
             return false;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return false;
-        } 
+        }
     }
+
 
     /**
      * Returns the student assigned to this project.
@@ -189,7 +202,7 @@ public class Project implements ChangeProjectTitle {
      */
     public int changeStudent(Student student) {
         try {
-            if(student == null) {
+            if (student == null) {
                 return 0;
             }
             this.student = student;
@@ -199,6 +212,7 @@ public class Project implements ChangeProjectTitle {
         }
         return 1;
     }
+
     
     /**
      * Removes the student assigned to this project.
@@ -209,6 +223,7 @@ public class Project implements ChangeProjectTitle {
         this.student = null;
         return 1;
     }
+
     
     /**
      * Displays the details of this project on the console, including its ID, supervisor, title, status, and, if allocated, student.
@@ -264,6 +279,7 @@ public class Project implements ChangeProjectTitle {
         }
     }
 
+
     /**
      * Retrieves a project from the project list by project ID.
      * 
@@ -284,6 +300,7 @@ public class Project implements ChangeProjectTitle {
             return null;
         }
     }
+
 
     /**
      * Retrieves a list of projects from the project list by project status.
@@ -328,6 +345,7 @@ public class Project implements ChangeProjectTitle {
             return null;
         }
     }
+
     
     /**
     * Adds a list of initial projects to the project list.
@@ -336,7 +354,8 @@ public class Project implements ChangeProjectTitle {
     * @return 1 if the addition was successful, 0 otherwise
     */
     public static int addInitialProjects(List<Project> initialProjectList) {
-        if (initialProjectList.isEmpty()) return 0;
+        if (initialProjectList.isEmpty())
+            return 0;
         try {
             if (projectList.addAll(initialProjectList)) {
                 return 1;
@@ -347,8 +366,22 @@ public class Project implements ChangeProjectTitle {
             return 0;
         }
         return 0; // should never reach this point
-        
+
     }
+
+    //NEW Method
+    public static int assignProjectList(List<Project> retrievedProjectList) {
+        try {
+            projectList = retrievedProjectList;
+            System.out.println("Project list assigned with length " + projectList.size() + ".");
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the project list: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+
     
     /**
      * Adds a project to the project list if it does not already exist.
@@ -356,9 +389,11 @@ public class Project implements ChangeProjectTitle {
      * @param project the project to add
      * @return 1 if the addition was successful, 0 if the project already exists or an error occurred
      */
+
     public static int addToProjectList(Project project) {
         try {
-            if(Project.getProjectByID(project.getProjectID()) != null) return 0; // project already exists
+            if (Project.getProjectByID(project.getProjectID()) != null)
+                return 0; // project already exists
             if (projectList.add(project)) {
                 return 1;
             }
@@ -367,6 +402,10 @@ public class Project implements ChangeProjectTitle {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
+        return 0;
+    }
+
+
         return 0;   
     }
     
@@ -386,9 +425,10 @@ public class Project implements ChangeProjectTitle {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-        return 0; 
-        
+        return 0;
+
     }
+
     
     /**
      * Modifies the status of all projects supervised by the given supervisor, except for projects with status "ALLOCATED".
@@ -407,12 +447,14 @@ public class Project implements ChangeProjectTitle {
                 }
             }
         } catch (Exception e) {
-            // handle exception appropriately, e.g. logging, throwing a custom exception, etc.
+            // handle exception appropriately, e.g. logging, throwing a custom exception,
+            // etc.
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
         return 1;
     }
+
     
     /**
      * Determines if the given object is an instance of the Project class.
@@ -428,10 +470,11 @@ public class Project implements ChangeProjectTitle {
                 return false;
             }
         } catch (Exception e) {
-            // handle exception appropriately, e.g. logging, throwing a custom exception, etc.
+            // handle exception appropriately, e.g. logging, throwing a custom exception,
+            // etc.
             System.err.println("Error: " + e.getMessage());
             return false;
         }
     }
-    
+
 }

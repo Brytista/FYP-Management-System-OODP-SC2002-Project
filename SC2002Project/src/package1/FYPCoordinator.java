@@ -174,6 +174,12 @@ public class FYPCoordinator extends Supervisor {
         }
     }
     
+
+    static public List<FYPCoordinator> getFYPCoordinators() {
+        return coordinators;
+    }
+
+
     /**
     * Adds the initial list of FYPCoordinator objects to the coordinators list.
     *
@@ -192,6 +198,20 @@ public class FYPCoordinator extends Supervisor {
 
         return 1;
     }
+
+
+    static public int assignFYPCoordinatorsList(List<FYPCoordinator> coordList) {
+        try {
+            coordinators = coordList;
+            System.out.println("FYPCoord list assigned with length " + coordinators.size() + ".");
+        } catch (Exception e) {
+            System.out.println("An error occurred while trying to assign the FYP Coordinator list: " + e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
+
 
     /**
     * Adds the given FYPCoordinator object to the list of coordinators.
