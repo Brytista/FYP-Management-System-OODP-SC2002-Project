@@ -4,39 +4,93 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+/**
+ * Child Class of users that used to represent a student
+*/
 public class Student extends User {
-
+    /**
+     * the type of request made by the student
+     */
     private StudentRequest requestType;
+    /**
+     * the type of request made by the student with a string parameter
+     */
     private StudentRequestWithString requestTypeWithString;
+    /**
+     * the project the student is currently working on
+     */
     private Project project;
-    private Boolean requestProject = false; // true if student has requested for a project
-    private Boolean isDeregistered = false; // true if student has deregistered
+    /**
+     * true if student has requested for a project
+     */
+    private Boolean requestProject = false;
+    /**
+     * true if student has deregistered
+     */
+    private Boolean isDeregistered = false;
 
+    /**
+     * a list of all student users in the system
+     */
     private static List<Student> students = new ArrayList<>();
+    /**
+     * a list of available requests a student can make
+     */
     private static List<String> availableRequests = new ArrayList<>(
             Arrays.asList("1. Project Allocation", "2. Change Project Title", "3. Deregistration"));
-
+    /**
+     * scanner object for user input
+     */
     Scanner scanner = new Scanner(System.in);
 
-    // Constructor
+    /**
+     * Creates a new student user with the specified parameters and adds them to the list of students in the system.
+     * 
+     * @param userID   the user ID of the student
+     * @param password the password of the student
+     * @param name     the name of the student
+     * @param email    the email of the student
+     */
     public Student(String userID, String password, String name, String email) {
         super(userID, password, name, email);
         // addToStudentsList(this); // add student to students list
     }
 
-    public int setIsDeregistered(Boolean change) {
-        if (change == null)
-            return 0; // failure (change cannot be null
+
+
+    /**
+     * Sets the student's isDeregistered status to the specified value.
+     *
+     * @param change the value to set the isDeregistered status to
+     * @return 1 if the status was successfully set, 0 if the change parameter is null
+     */
+    public int setIsDeregistered(Boolean change){
+        if(change == null) return 0; // failure (change cannot be null)
         this.isDeregistered = change;
         return 1;
     }
 
-    public Boolean getIsDeregistered() {
+    /**
+     * Returns the student's isDeregistered status.
+     *
+     * @return the student's isDeregistered status
+     */
+    public Boolean getIsDeregistered(){
         return this.isDeregistered;
     }
 
-    public static Student createStudent(String userID, String password, String name, String email) {
+    /**
+     * Creates a new student with the specified userID, password, name, and email, if a
+     * student with the same userID does not already exist.
+     *
+     * @param userID the student's userID
+     * @param password the student's password
+     * @param name the student's name
+     * @param email the student's email
+     * @return the new student if created successfully, or null if a student with the same
+     *         userID already exists or an error occurs
+     */
+    public static Student createStudent(String userID, String password, String name, String email){
         try {
             if (Student.getStudentByID(userID) == null) {
                 Student newStudent = new Student(userID, password, name, email);
@@ -57,7 +111,10 @@ public class Student extends User {
         }
     }
 
-    // displayProjects(): displays all projects
+    /**
+     * Displays the student's assigned project, if one exists.
+     * If the student does not have an assigned project, displays an error message.
+     */
     public void displayProjects() {
         try {
             if (this.isProjectAssigned()) {
@@ -73,7 +130,9 @@ public class Student extends User {
         return;
     }
 
-    // displayAvailableRequests(): displays all available requests
+    /**
+     * Displays all available requests.
+     */
     public static void displayAvailableRequests() {
         try {
 
@@ -85,6 +144,12 @@ public class Student extends User {
         }
     }
 
+
+    /**
+     * Adds the given request to the list of available requests.
+     * @param request The request to add to the list of available requests.
+     * @return Returns 1 if the request was successfully added to the list, or 0 if the request is null or already exists in the list.
+     */
     public static int addAvailableRequest(String request) {
         if (request == null) {
             System.err.println("Error: Request cannot be null");
@@ -98,7 +163,12 @@ public class Student extends User {
         return 1;
     }
 
-    public int getProjectID() {
+
+    /**
+     * Returns the project ID for the given student if they have an assigned project.
+     * @return Returns the project ID if the student has an assigned project, or -1 if no project is assigned or an exception occurs.
+     */
+    public int getProjectID(){
         try {
             if (this.isProjectAssigned()) {
                 return this.project.getProjectID();
@@ -112,20 +182,34 @@ public class Student extends User {
         return -1;
     }
 
-    // ADD NEW METHODS HERE
-    public Boolean returnRequestProject() {
-        return this.requestProject;
+
+    
+   /**
+     * Returns the current value of the requestProject field.
+     *
+     * @return the current value of the requestProject field.
+     */
+    public Boolean returnRequestProject(){
+        return this.requestProject; 
     }
 
-    // ADD NEW METHODS HERE
-    public void setRequestProject(Boolean change) {
+    /**
+     * Sets the value of the requestProject field to the given boolean value.
+     *
+     * @param change the new value to set the requestProject field to.
+     */
+    public void setRequestProject(Boolean change){
         this.requestProject = change;
     }
 
-    // chooseAndSetRequest(): sets the request type based on user selection
+    /**
+     * Chooses and sets the appropriate request type based on the given request ID.
+     *
+     * @param requestID the ID of the request type to set.
+     * @return 1 if the request type is set successfully, 0 if an error occurs.
+     */
     @Override
     public int chooseAndSetRequest(int requestID) {
-
         try {
             switch (requestID) {
                 case 1:
@@ -161,12 +245,16 @@ public class Student extends User {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-
         return 1; // request type set successfully
     }
 
-    // getNewProjectTitle(): gets the new project title from the user
-    // getNewProjectTitle(): gets the new project title from the user
+
+
+    /**
+     * Gets the new project title from the user.
+     * 
+     * @return A String containing the new project title entered by the user, or null if an error occurs
+     */
     public String getNewProjectTitle() {
         try {
             System.out.println("Enter new project title: ");
@@ -178,9 +266,15 @@ public class Student extends User {
         }
     }
 
-    // makeRequest(): makes a request to a supervisor; 1 returned if successful,
-    public int makeRequest(String recipientID, int projectID) {
 
+    /**
+     * Makes a request to a supervisor.
+     * 
+     * @param recipientID The ID of the supervisor receiving the request
+     * @param projectID The ID of the project for which the request is being made
+     * @return 1 if the request was successfully sent, 0 otherwise
+     */
+    public int makeRequest(String recipientID, int projectID) {
         try {
             Project project = selectProject(projectID);
             Supervisor recipient = selectRecipient(recipientID);
@@ -191,7 +285,6 @@ public class Student extends User {
             }
 
             if (this.requestType != null) {
-
                 this.requestType.create(this, recipient, project);
 
                 if (this.requestType.sendRequest() == 1) {
@@ -199,50 +292,58 @@ public class Student extends User {
                         setRequestProject(true);
                     }
                     return 1;
-                } // request is sent
-                else {
-                    return 0; // request not sent
+                } else {
+                    return 0;
                 }
-
             } else if (this.requestTypeWithString != null) {
-
                 String newProjectTitle = getNewProjectTitle();
                 this.requestTypeWithString.create(this, recipient, project, newProjectTitle);
 
                 if (this.requestTypeWithString.sendRequest() == 1) {
-                    return 1; // request is sent
+                    return 1;
                 } else {
-                    return 0; // request not sent
+                    return 0;
                 }
-
             } else {
                 System.err.println("Error: No request type selected");
                 return 0;
             }
-
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
     }
 
-    // selectProject(): returns the project with the selected ID
+
+
+    /**
+     * selectProject(): Returns the project with the selected ID
+     * 
+     * @param projectID the ID of the project to select
+     * @return the selected project, or null if it cannot be found
+     */
     private Project selectProject(int projectID) {
         try {
             return Project.getProjectByID(projectID);
+
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return null;
         }
     }
 
-    // selectRecipient(): returns the supervisor with the selected ID
+
+    /**
+     * selectRecipient(): Returns the supervisor with the selected ID
+     * 
+     * @param supervisorID the ID of the supervisor to select
+     * @return the selected supervisor, or null if it cannot be found
+     */
     private Supervisor selectRecipient(String supervisorID) {
         try {
-            if (Supervisor.getSupervisorByID(supervisorID) == null) {
+            if(Supervisor.getSupervisorByID(supervisorID) == null) {
                 return FYPCoordinator.getCoordinatorByID(supervisorID);
             }
-            ;
             return Supervisor.getSupervisorByID(supervisorID);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -250,10 +351,12 @@ public class Student extends User {
         }
     }
 
-    // viewAllProjects(): displays all available projects
+    /**
+     * viewAllProjects(): Displays all available projects
+     */
     public void viewAllProjects() {
         try {
-            if (this.getIsDeregistered()) {
+            if(this.getIsDeregistered()){
                 System.out.println("--------------------");
                 System.out.println("You are not allowed to make selection again as you deregistered your FYP");
                 System.out.println("--------------------");
@@ -265,7 +368,11 @@ public class Student extends User {
         }
     }
 
-    // isProjectAssigned(): returns true if the student has an assigned project
+    /**
+     * isProjectAssigned(): Returns true if the student has an assigned project
+     * 
+     * @return true if the student has an assigned project, false otherwise
+     */
     public boolean isProjectAssigned() {
         try {
             return this.project != null;
@@ -275,7 +382,13 @@ public class Student extends User {
         }
     }
 
-    // changeProject(): changes the student's project; 1 returned if successful
+
+    /**
+     * Changes the student's project.
+     *
+     * @param newProject the new project to be assigned to the student
+     * @return 1 if successful, 0 if unsuccessful
+     */
     public int changeProject(Project newProject) {
         try {
             this.project = newProject;
@@ -286,11 +399,22 @@ public class Student extends User {
         }
     }
 
+
+    /**
+     * Returns the project assigned to the student.
+     *
+     * @return the project assigned to the student
+     */
     public Project getProject() {
         return this.project;
     }
 
-    // removeProject(): removes the student's project
+
+    /**
+     * Removes the project assigned to the student.
+     *
+     * @return 1 if successful, 0 if unsuccessful
+     */
     public int removeProject() {
         try {
             this.project = null;
@@ -302,11 +426,15 @@ public class Student extends User {
         return 1;
     }
 
+
     public static List<Student> getStudents() {
         return students;
     }
 
-    // displayAllStudents(): displays all students
+
+    /**
+     * Displays all students in the system.
+     */
     public static void displayAllStudents() {
         try {
             for (Student student : students) {
@@ -319,7 +447,12 @@ public class Student extends User {
         }
     }
 
-    // getStudentByName(): returns the student(s) with the selected name
+    
+    /**
+     * Returns the student(s) with the selected name.
+     * @param name the name to search for
+     * @return a list of students with the given name
+     */
     public static List<Student> getStudentByName(String name) {
         List<Student> returnStudents = new ArrayList<>();
         try {
@@ -334,7 +467,12 @@ public class Student extends User {
         return returnStudents;
     }
 
-    // getStudentByID(): returns the student with the selected ID
+
+    /**
+     * Returns the student with the selected ID.
+     * @param userID the ID to search for
+     * @return the student with the given ID, or null if not found
+     */
     public static Student getStudentByID(String userID) {
         Student returnStudent = null;
         try {
@@ -350,9 +488,13 @@ public class Student extends User {
         return returnStudent;
     }
 
-    // addInitialStudents(): adds a list of students to the students List object
-    public int addInitialStudents(List<Student> studentsList) {
 
+    /**
+     * Adds a list of students to the students List object.
+     * @param studentsList the list of students to add
+     * @return 1 if successful, 0 otherwise
+     */
+    public static int addInitialStudents(List<Student> studentsList) {
         try {
             for (Student student : studentsList) {
                 students.add(student);
@@ -361,7 +503,6 @@ public class Student extends User {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-
         return 1;
     }
 
@@ -378,37 +519,56 @@ public class Student extends User {
         return 1;
     }
 
-    // addToStudentsList(): adds a student to the students List object
-    public static int addToStudentsList(Student student) {
 
+    /**
+     * Adds a student to the students List object
+     *
+     * @param student the Student object to be added
+     * @return 1 if successful, 0 if unsuccessful
+     */
+    public static int addToStudentsList(Student student) {
         try {
             students.add(student);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-
         return 1;
     }
 
-    // removeFromStudentsList(): removes a student from the students List object
+    /**
+     * Removes a student from the students List object
+     *
+     * @param student the Student object to be removed
+     * @return 1 if successful, 0 if unsuccessful
+     */
     public int removeFromStudentsList(Student student) {
-
         try {
             students.remove(student);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-
         return 1;
     }
 
-    // isStudent(): confirms whether the user belongs to a Student class
+    /**
+     * Confirms whether the user belongs to a Student class
+     *
+     * @return always returns true for a Student object
+     */
     public boolean isStudent() {
         return true;
     }
 
+
+    /**
+     * Attempts to log in a student with the given user ID and password
+     *
+     * @param userID   the user ID of the student
+     * @param password the password of the student
+     * @return 1 if successful (user exists and password is correct), 0 if unsuccessful (user does not exist or password is incorrect)
+     */
     public static int loginStudent(String userID, String password) {
         try {
             for (Student student : students) {
