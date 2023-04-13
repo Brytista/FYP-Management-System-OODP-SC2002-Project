@@ -1,11 +1,30 @@
 package package1;
-public abstract class StudentRequest extends Request {
-    protected Student sender; // the user who sent the request
 
+/**
+ * The abstract class representing a student request.
+ */
+public abstract class StudentRequest extends Request {
+    /**
+     * the user who sent the request
+     */
+    protected Student sender;
+
+    /**
+     * Creates a new instance of the StudentRequest class.
+     * 
+     * @param sender the student sending the request
+     * @param recipient the supervisor receiving the request
+     * @param project the project related to the request
+     */
     public StudentRequest(Student sender, Supervisor recipient, Project project) {
         super(sender, recipient, project);
     }
     
+    /**
+     * Sends the request to the recipient.
+     * 
+     * @return 1 if the request was successfully sent, 0 if there was an error
+     */
     public int sendRequest() {
         try {
             // Send the request to the recipient
@@ -21,6 +40,14 @@ public abstract class StudentRequest extends Request {
         }
     }
     
+    /**
+     * Creates a new instance of the StudentRequest class.
+     * 
+     * @param sender the student sending the request
+     * @param recipient the supervisor receiving the request
+     * @param project the project related to the request
+     * @return 1 if the request was successfully created, 0 if there was an error
+     */
     public int create(Student sender, Supervisor recipient, Project project){
         try {
             if(sender == null || recipient == null || project == null){
@@ -38,6 +65,12 @@ public abstract class StudentRequest extends Request {
         }
     }
     
+    /**
+     * Changes the sender of the request.
+     * 
+     * @param sender the new sender of the request
+     * @return 1 if the sender was successfully changed, 0 if there was an error
+     */
     public int changeSender(Student sender){
         try {
             if (!(sender.isStudent())) {
@@ -50,6 +83,5 @@ public abstract class StudentRequest extends Request {
             return 0; // failure
         }
     }
-    
-    
 }
+

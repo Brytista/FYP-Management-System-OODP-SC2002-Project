@@ -2,18 +2,50 @@ package package1;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Parent Class of all user using the FYP management system
+*/
 abstract class User{
 
+    /**
+     * The unique user ID of the user.
+     */
     private String userID;
+
+    /**
+     * The password of the user's account.
+     */
     private String password;
+
+    /**
+     * The name of the user.
+     */
     private String name;
+
+    /**
+     * A boolean flag indicating if the user is currently logged in.
+     */
     private boolean loggedIn = false;
+
+    /**
+     * The email address of the user.
+     */
     private String email;
 
+    /**
+     * A list of requests made by the user in the past.
+     */
     private List<Request> requestHistory = new ArrayList<>();
 
-    // Constructor
+
+    /**
+    * Creates a new user with the specified user ID, password, name, and email address.
+    *
+    * @param userID the user's unique identifier
+    * @param password the user's password
+    * @param name the user's name
+    * @param email the user's email address
+    */
     public User(String userID, String password, String name, String email) {
         this.userID = userID;
         this.password = password;
@@ -21,17 +53,29 @@ abstract class User{
         this.email = email;
     }
 
-    // chooseAndSetRequest(): user selects the request they want to make; 1 returned
-    // if successful, otherwise 0 and error is logged
+    /**
+     * Allows the user to select a request they want to make, and sets the selected request ID.
+     *
+     * @param requestID the ID of the request the user wants to make
+     * @return 1 if the selection is successful; otherwise 0, and an error is logged.
+     */
     public abstract int chooseAndSetRequest(int requestID);
 
-    // getUserID(): returns the userID
+    /**
+     * Returns the user's unique identifier.
+     *
+     * @return the user's unique identifier
+     */
     public String getUserID() {
         return userID;
     }
 
-    // setUserID(): sets the userID; 1 returned if successful, otherwise 0 and error
-    // is logged
+    /**
+     * Sets the user's unique identifier.
+     *
+     * @param userID the new unique identifier to set for the user
+     * @return 1 if the set operation is successful; otherwise 0, and an error is logged.
+     */
     public int setUserID(String userID) {
         try {
             this.userID = userID;
@@ -43,13 +87,23 @@ abstract class User{
         return 1;
     }
 
-    // getUserName(): returns the user's name
+
+    /**
+     * Returns the user's name.
+     *
+     * @return the user's name
+     */
     public String getUserName() {
         return name;
     }
 
-    // setUserName(): sets the user's name; 1 returned if successful, otherwise 0
-    // and error is logged
+
+    /**
+     * Sets the user's name.
+     *
+     * @param name the new name to set for the user
+     * @return 1 if the set operation is successful; otherwise 0, and an error is logged.
+     */
     public int setUserName(String name) {
         try {
             this.name = name;
@@ -61,13 +115,22 @@ abstract class User{
         return 1;
     }
 
-    // getPassword(): returns the password
+
+    /**
+     * Returns the user's password.
+     *
+     * @return the user's password
+     */
     public String getPassword() {
         return password;
     }
 
-       // changePassword(): returns 1 if password change is successful, otherwise 0 and
-    // error is logged
+    /**
+     * Changes the user's password to the specified value.
+     *
+     * @param password the new password to set for the user
+     * @return 1 if the password change operation is successful; otherwise 0, and an error is logged.
+     */
     public int changePassword(String password) {
         try {
             this.password = password;
@@ -79,13 +142,23 @@ abstract class User{
         return 1;
     }
 
-    // getEmail(): returns the email
+
+    /**
+     * Returns the user's email.
+     *
+     * @return the user's email
+     */
     public String getEmail() {
         return email;
     }
 
-    // setEmail(): sets the email; 1 returned if successful, otherwise 0 and error
-    // is logged
+
+    /**
+     * Sets the user's email.
+     *
+     * @param email the new email to set for the user
+     * @return 1 if the set operation is successful; otherwise 0, and an error is logged.
+     */
     public int setEmail(String email) {
         try {
             this.email = email;
@@ -97,7 +170,14 @@ abstract class User{
         return 1;
     }
 
+
     
+    /**
+     * Logs the user into the system. Returns 1 if the login operation is successful;
+     * otherwise 0 and an error is logged.
+     *
+     * @return 1 if the login operation is successful; otherwise 0, and an error is logged.
+     */
     public int login(){
         try {
             if(loggedIn) return 0;
@@ -106,12 +186,18 @@ abstract class User{
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-    
+
         return 1;
     }
+
     
 
-    // logout(): returns 1 if logout is successful, otherwise 0 and error is logged
+    /**
+     * Logs the user out of the system. Returns 1 if the logout operation is successful;
+     * otherwise 0 and an error is logged.
+     *
+     * @return 1 if the logout operation is successful; otherwise 0, and an error is logged.
+     */
     public int logout() {
         try {
             this.loggedIn = false; // set loggedIn to false
@@ -122,10 +208,16 @@ abstract class User{
 
         return 1;
     }
+
  
 
-    // addRequestToHistory(): adds a request to the user's request history;
-    // 1 returned if successful, otherwise 0 and error is logged
+    /**
+     * Adds a request to the user's request history. Returns 1 if the operation is successful;
+     * otherwise 0 and an error is logged.
+     *
+     * @param request the request to add to the user's request history
+     * @return 1 if the operation is successful; otherwise 0, and an error is logged.
+     */
     public int addRequestToHistory(Request request) {
         try {
             requestHistory.add(request);
@@ -134,10 +226,12 @@ abstract class User{
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
-
     }
 
-    // displayRequestHistory(): displays the user's request history
+
+    /**
+     * Displays the user's request history.
+     */
     public void displayRequestHistory() {
         try {
             DisplayAll.displayRequestHistory(requestHistory);
@@ -145,22 +239,43 @@ abstract class User{
             System.err.println("Error: " + e.getMessage());
         }
     }
+
     
 
+    /**
+     * Returns false to indicate that the user is not a student.
+     *
+     * @return false to indicate that the user is not a student
+     */
     public boolean isStudent() {
         return false;
     }
 
+
+    /**
+     * Returns false to indicate that the user is not a supervisor.
+     *
+     * @return false to indicate that the user is not a supervisor
+     */
     public boolean isSupervisor() {
         return false;
     }
 
+    /**
+     * Returns false to indicate that the user is not an FYPCoordinator.
+     *
+     * @return false to indicate that the user is not an FYPCoordinator
+     */
     public boolean isFYPCoordinator() {
         return false;
     }
 
+    /**
+     * Returns the value of the loggedIn field to indicate whether the user is currently logged in or not.
+     *
+     * @return true if the user is currently logged in, false otherwise
+     */
     public boolean isLoggedIn(){
         return loggedIn;
     }
-
 }
