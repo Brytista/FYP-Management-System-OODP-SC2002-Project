@@ -1,8 +1,22 @@
 package package1;
 import java.util.Scanner;
 
+/**
+ * Represents a request to change the supervisor of a project.
+ * Extends the SupervisorRequest class.
+ */
 public class RequestChangeSupervisor extends SupervisorRequest {
-    
+    /**
+     * This variable represents the extra description of a project, which is an optional field and can be null.
+     */
+    private String extraDescription = null; // extra description for the request
+    /**
+     * Constructor for RequestChangeSupervisor
+     * @param sender
+     * @param recipient
+     * @param project
+     * @param replacementSupervisor
+     */
     public RequestChangeSupervisor(Supervisor sender, FYPCoordinator recipient, Project project,
             Supervisor replacementSupervisor) {
         super(sender, recipient, project, replacementSupervisor);
@@ -11,8 +25,12 @@ public class RequestChangeSupervisor extends SupervisorRequest {
         this.project = project;
         this.replacementSupervisor = replacementSupervisor;
     }
-    private String extraDescription = null; // extra description for the request
 
+    /**
+     * Approves the request to change the supervisor of a project.
+     *
+     * @return 1 if the request was successfully approved, 0 otherwise
+     */
     @Override
     public int approve() {
         try {
@@ -25,15 +43,16 @@ public class RequestChangeSupervisor extends SupervisorRequest {
 
             if(project.getProjectStatus()==ProjectStatus.ALLOCATED){
             if(replacementSupervisor.capReached()){
-                System.out.println("The replacement supervisor has reached cap number of student managed, you may not want to accept the request. You sure to continue? (0 for No, enter anything else for YES)");
+                System.out.println("The replacement supervisor has reached cap number of student managed, you cannot accept the request. Press anything to reject the request.");
                 int answer; 
                 try{
                     sc = new Scanner(System.in);
                     answer = sc.nextInt();
                     sc.nextLine(); // consume the newline
-                    if(answer==0){return 0;}
+                    this.reject();
+                    return 0; 
                 } catch (Exception e) {
-                    System.err.println("Error: " + e.getMessage());
+                    this.reject();
                     return 0; 
                 }
             }
@@ -82,6 +101,11 @@ public class RequestChangeSupervisor extends SupervisorRequest {
         }
     }
 
+    /**
+     * Rejects the request to change the supervisor of a project.
+     *
+     * @return 1 if the request was successfully rejected, 0 otherwise
+     */
     @Override
     public int reject() {
         try {
@@ -98,6 +122,11 @@ public class RequestChangeSupervisor extends SupervisorRequest {
         }
     }
 
+    /**
+     * Sends the request to change the supervisor of a project to the recipient.
+     *
+     * @return 1 if the request was successfully sent, 0 otherwise
+     */
     public int sendRequest(){
         try {
             //Send the request to the recipient
@@ -116,10 +145,13 @@ public class RequestChangeSupervisor extends SupervisorRequest {
         }
     }
 
+    /**
+     * Displays the description of the request to change the supervisor of a project.
+     */
     public void displayRequestDescription(){
         try {
             if(project.getProjectStatus()==ProjectStatus.ALLOCATED&&replacementSupervisor.capReached()){
-                extraDescription = "The replacement supervisor has reached cap number of student managed, you may not want to accept the request." + "He/She is currently managing "+ replacementSupervisor.getStudentsManaged().size() + " students."; 
+                extraDescription = "The replacement supervisor has reached cap number of student managed, you cannot accept the request." + "He/She is currently managing "+ replacementSupervisor.getStudentsManaged().size() + " students."; 
             }
             else{
                 extraDescription = "No extra notice"; 

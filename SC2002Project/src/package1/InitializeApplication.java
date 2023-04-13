@@ -6,16 +6,46 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.nio.file.Paths;
 
+/**
+ * The InitializeApplication class is responsible for loading data from CSV files
+ * and initializing the application with the loaded data. It reads data for students,
+ * supervisors, FYP coordinators, and projects from their respective CSV files and
+ * assigns the loaded data to the corresponding classes.
+ *
+ * The class provides methods for loading each type of data individually and a method
+ * to load all data at once. Upon successful loading of data, it assigns the lists to
+ * their respective classes.
+ */
 public class InitializeApplication {
-
+    /**
+     * A static list containing all Student objects in the system.
+     */
     private static List<Student> studentList = new ArrayList<>();
+
+    /**
+     * A static list containing all Supervisor objects in the system.
+     */
     private static List<Supervisor> supervisorList = new ArrayList<>();
+
+    /**
+     * A static list containing all FYPCoordinator objects in the system.
+     */
     private static List<FYPCoordinator> fypCoordinatorList = new ArrayList<>();
+
+    /**
+     * A static list containing all Project objects in the system.
+     */
     private static List<Project> projectList = new ArrayList<>();
 
+
+    /** Constructor for the InitializeApplication class. */
     public InitializeApplication() {}
 
-    // Load all the lists from the CSV files and assign them to the respective classes
+     /**
+     * Assigns the loaded lists to their respective classes.
+     *
+     * @return 1 if the lists are loaded successfully, 0 if there was an error
+     */
     public static int assignAllLists() {
         int loaded = InitializeApplication.loadAllLists();
 
@@ -34,7 +64,11 @@ public class InitializeApplication {
         }
     }
 
-    // Load the Student list from the CSV file
+    /**
+     * Loads the student list from a CSV file.
+     *
+     * @return 1 if the list is loaded successfully, 0 if there was an error
+     */
     public static int loadStudentList() {
 
         // Create a BufferedReader object to read the CSV file
@@ -95,7 +129,11 @@ public class InitializeApplication {
         return 1;
     }
 
-    // Load the supervisor list from the CSV file
+    /**
+     * Loads the supervisor list from a CSV file.
+     *
+     * @return 1 if the list is loaded successfully, 0 if there was an error
+     */
     public static int loadSupervisorList() {
 
         // Create a BufferedReader object to read the CSV file
@@ -161,7 +199,11 @@ public class InitializeApplication {
 
     }
 
-    // Load the FYP Coordinator list from the CSV file
+    /**
+     * Loads the FYP Coordinator list from a CSV file.
+     *
+     * @return 1 if the list is loaded successfully, 0 if there was an error
+     */
     public static int loadFYPCoordinatorList() {
 
         // Create a BufferedReader object to read the CSV file
@@ -207,7 +249,11 @@ public class InitializeApplication {
 
     }
 
-    // Load the project list from the CSV file
+    /**
+     * Loads the project list from a CSV file.
+     *
+     * @return 1 if the list is loaded successfully, 0 if there was an error
+     */
     public static int loadProjectList() {
 
         // Create a BufferedReader object to read the CSV file
@@ -235,7 +281,7 @@ public class InitializeApplication {
                 Student student = Student.getStudentByID(fields[4]);
 
                 // Assign the project's projectID, projectStatus and student
-                project.projectID = Integer.parseInt(fields[0]);
+                //project.projectID = Integer.parseInt(fields[0]);
                 project.projectStatus = projectStatus;
                 project.student = student;
                 
@@ -261,6 +307,11 @@ public class InitializeApplication {
 
     }
 
+    /**
+     * Loads all lists (student, supervisor, FYP Coordinator, and project) from CSV files.
+     *
+     * @return 1 if all lists are loaded successfully, 0 if there was an error
+     */
     public static int loadAllLists() {
 
         int loadedStudents = InitializeApplication.loadStudentList();

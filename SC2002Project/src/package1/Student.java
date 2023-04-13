@@ -341,7 +341,7 @@ public class Student extends User {
      */
     private Supervisor selectRecipient(String supervisorID) {
         try {
-            if(Supervisor.getSupervisorByID(supervisorID) == null) {
+            if(FYPCoordinator.getCoordinatorByID(supervisorID) != null) {
                 return FYPCoordinator.getCoordinatorByID(supervisorID);
             }
             return Supervisor.getSupervisorByID(supervisorID);
@@ -426,7 +426,11 @@ public class Student extends User {
         return 1;
     }
 
-
+    /**
+     * Retrieves the list of students in the system.
+     *
+     * @return List of Student objects representing all the students in the system.
+     */
     public static List<Student> getStudents() {
         return students;
     }
@@ -506,7 +510,12 @@ public class Student extends User {
         return 1;
     }
 
-    // assignStudentsList(): assigns a list of students to the students List object
+    /**
+     * Assigns a list of students to the students List object in the system.
+     *
+     * @param studentsList The list of Student objects to be assigned to the students list.
+     * @return 1 if the assignment is successful, 0 if an error occurred during the assignment.
+     */
     public static int assignStudentsList(List<Student> studentsList) {
         try {
             students = studentsList;

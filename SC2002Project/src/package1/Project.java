@@ -3,10 +3,11 @@ package package1;
 import java.util.List;
 import java.util.ArrayList;
 /**
- * A class representing a project.
- * This class implements the ChangeProjectTitle interface, which allows the project title to be changed.
+ * A class that represents a project.
+ * A project has a unique project ID, a supervisor, a title, a status, and a student.
+ * A project can be in one of the following statuses: AVAILABLE, RESERVED, UNAVAILABLE, ALLOCATED.
  */
-public class Project implements ChangeProjectTitle {
+public class Project {
     /**
      * the ID of the project
      */
@@ -156,11 +157,7 @@ public class Project implements ChangeProjectTitle {
     }
 
 
-    // NEW METHOD
-    public boolean doesProjectBelongToSupervisor(int projectID) {
-        try {
-            for (Project project : projectList) {
-                if (project.getProjectID() == projectID) {
+
 
     /**
      * Checks if the project with the specified project ID belongs to the supervisor of this project.
@@ -369,7 +366,10 @@ public class Project implements ChangeProjectTitle {
 
     }
 
-    //NEW Method
+    /** Assigns a retrieved list of projects to the current project list.
+    * @param retrievedProjectList a list of projects retrieved from a data source
+    * @return an integer indicating the success or failure of the operation. 1 means success, 0 means failure.
+    */
     public static int assignProjectList(List<Project> retrievedProjectList) {
         try {
             projectList = retrievedProjectList;
@@ -406,8 +406,7 @@ public class Project implements ChangeProjectTitle {
     }
 
 
-        return 0;   
-    }
+
     
     /**
      * Removes a project from the project list.
@@ -475,6 +474,14 @@ public class Project implements ChangeProjectTitle {
             System.err.println("Error: " + e.getMessage());
             return false;
         }
+    }
+
+    /**
+    Returns the current project list.
+    @return the current project list.
+    */
+    public static List<Project> getProjectList(){
+        return projectList;
     }
 
 }

@@ -175,6 +175,11 @@ public class FYPCoordinator extends Supervisor {
     }
     
 
+    /**
+     * Returns the list of FYP coordinators.
+     *
+     * @return The list of FYP coordinators.
+     */
     static public List<FYPCoordinator> getFYPCoordinators() {
         return coordinators;
     }
@@ -199,7 +204,12 @@ public class FYPCoordinator extends Supervisor {
         return 1;
     }
 
-
+    /**
+     * Assigns the given list of FYP coordinators to the static list.
+     *
+     * @param coordList The list of FYP coordinators to be assigned.
+     * @return 1 if the list is successfully assigned, 0 otherwise.
+     */
     static public int assignFYPCoordinatorsList(List<FYPCoordinator> coordList) {
         try {
             coordinators = coordList;

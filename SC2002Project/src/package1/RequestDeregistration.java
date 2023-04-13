@@ -1,10 +1,25 @@
 package package1;
 
+/**
+ * A class representing a request to deregister a student from a project.
+ * Extends the StudentRequest class.
+ */
 public class RequestDeregistration extends StudentRequest {
-
+    /**
+     * Constructor for RequestDeregistration
+     * @param sender
+     * @param recipient
+     * @param project
+     */
     public RequestDeregistration(Student sender, Supervisor recipient, Project project) {
         super(sender, recipient, project);
     }
+    
+    /**
+     * Approves the request to deregister a student from a project.
+     * 
+     * @return 1 if the request was successfully approved, 0 otherwise
+     */
     @Override
     public int approve() {
         try {
@@ -29,6 +44,11 @@ public class RequestDeregistration extends StudentRequest {
         }
     }
     
+    /**
+     * Rejects the request to deregister a student from a project.
+     * 
+     * @return 1 if the request was successfully rejected, 0 otherwise
+     */
     @Override
     public int reject() {
         try {
@@ -45,6 +65,11 @@ public class RequestDeregistration extends StudentRequest {
         }
     }
     
+    /**
+     * Sends the request to the recipient.
+     * 
+     * @return 1 if the request was successfully sent, 0 otherwise
+     */
     public int sendRequest(){
         try {
             //Send the request to the recipient
@@ -61,6 +86,9 @@ public class RequestDeregistration extends StudentRequest {
         }
     }
     
+    /**
+     * Displays or print the request description.
+     */
     public void displayRequestDescription(){
         try {
             System.out.println("Request to deregister " + sender.getUserName() + " from project " + project.getProjectTitle());

@@ -31,8 +31,7 @@ public abstract class StudentRequest extends Request {
             if (sender == null || recipient == null) {
                 return 0; // failure, sender or recipient is null
             }
-            sender.addRequestToHistory(this);
-            recipient.addPendingRequest(this);
+            if(sender.addRequestToHistory(this)==0||recipient.addPendingRequest(this)==0) {return 0;}
             return 1; // success
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

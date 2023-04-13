@@ -6,8 +6,17 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class handles data management for the application, including updating
+ * the CSV files for students, supervisors, FYP coordinators, and projects.
+ */
 public class DataManager {
 
+     /**
+     * Updates all CSV files and returns the result.
+     *
+     * @return 1 if all files are successfully updated, 0 otherwise.
+     */
     public static int updateAll() {
 
         int updateStudentsResult = updateStudents();
@@ -24,7 +33,11 @@ public class DataManager {
         }
     }
 
-    // Update studentList.csv file
+    /**
+     * Updates the studentList.csv file with the latest student data.
+     *
+     * @return 1 if the file is successfully updated, 0 otherwise.
+     */
     public static int updateStudents() {
 
         String filePath = Paths.get("files/studentList.csv").toString();
@@ -64,7 +77,11 @@ public class DataManager {
         return 1;
     }
 
-    // Update supervisorList.csv file
+     /**
+     * Updates the supervisorList.csv file with the latest supervisor data.
+     *
+     * @return 1 if the file is successfully updated, 0 otherwise.
+     */
     public static int updateSupervisors() {
 
         String filePath = Paths.get("files/supervisorList.csv").toString();
@@ -91,7 +108,7 @@ public class DataManager {
                     studentManaged.add("None;");
 
                 } else {
-                    for (Student student : supervisor.studentManaged) {
+                    for (Student student : supervisor.getStudentsManaged()) {
                         String studentID;
 
                         if (student != null) {
@@ -120,7 +137,11 @@ public class DataManager {
         return 1;
     }
 
-    // Update fypCoordinatorList.csv file
+     /**
+     * Updates the fypCoordinatorList.csv file with the latest FYP coordinator data.
+     *
+     * @return 1 if the file is successfully updated, 0 otherwise.
+     */
     public static int updateFYPCoords() {
 
         String filePath = Paths.get("files/fypCoordinatorList.csv").toString();
@@ -153,12 +174,16 @@ public class DataManager {
         return 1;
     }
 
-    // Update projectList.csv file
+     /**
+     * Updates the projectList.csv file with the latest project data.
+     *
+     * @return 1 if the file is successfully updated, 0 otherwise.
+     */
     public static int updateProjects() {
 
         String filePath = Paths.get("files/projectList.csv").toString();
 
-        List<Project> projects = Project.projectList;
+        List<Project> projects = Project.getProjectList();
 
         try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter(filePath))) {
             for (Project project : projects) {
@@ -168,7 +193,7 @@ public class DataManager {
                 // index 1: supervisorID
                 String supervisorID = project.supervisor.getUserID();
                 // index 2: projectTitle
-                String name = project.projectTitle;
+                String name = project.getProjectTitle();
                 // index 3: projectStatus
                 String projectStatus = String.valueOf(project.projectStatus);
                 // index 4: studentID
@@ -194,3 +219,5 @@ public class DataManager {
     }
 
 }
+
+

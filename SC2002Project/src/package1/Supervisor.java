@@ -434,13 +434,7 @@ public class Supervisor extends User {
      */
     public List<Student> getStudentsManaged(){
         try {
-            List<Student> arr = new ArrayList<>();
-            for(Project project: projectList){
-                if(project.getProjectStatus() == ProjectStatus.ALLOCATED){
-                    arr.add(project.getStudent());
-                }
-            }
-            return arr;
+            return studentManaged; 
         } catch (Exception e) {
             System.out.println("An error occurred while trying to get the managed students: " + e.getMessage());
             return null;
@@ -508,12 +502,22 @@ public class Supervisor extends User {
         }
     }
 
-  //NEW METHOD
+    /**
+     * Adds the specified Supervisor to the allSupervisor list.
+     * 
+     * @param supervisor the Supervisor to add
+     * @return 1 if the Supervisor was added successfully, 0 if an error occurred
+     */
     public static List<Supervisor> getSupervisors() {
         return allSupervisor;
     }
     
-    //NEW METHOD
+    /**
+     * Assigns the specified list of Supervisors to the allSupervisor list.
+     * 
+     * @param supervisorsList the list of Supervisors to assign
+     * @return 1 if the list was assigned successfully, 0 if an error occurred
+     */
     public static int assignSupervisorsList(List<Supervisor> supervisorsList) {
         try {
             allSupervisor = supervisorsList;
@@ -622,7 +626,12 @@ public class Supervisor extends User {
         }
     }
 
-
+    /**
+     * Determines if the specified student belongs to the supervisor.
+     *
+     * @param student the student to check
+     * @return true if the student belongs to the supervisor, false otherwise
+     */
     public int assignStudentManaged(List<Student> students) {
         try {
             studentManaged = students;
@@ -798,6 +807,7 @@ public boolean doSupervisorHaveProject(){
         return false;
     }
 }
+
 
 
 }

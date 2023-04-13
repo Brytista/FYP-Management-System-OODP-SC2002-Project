@@ -14,27 +14,6 @@ public class App {
         // Put the read file
         Scanner sc = new Scanner(System.in);
         int quit = 0;
-
-        // Add Students
-        // Student student1 = new Student("BKIELY001", "password", "Bryan", "BKIELY001@e.ntu.edu.sg");
-        // Student student2 = new Student("JAMIE69", "password", "Yiji", "JAMIE69@e.ntu.edu.sg");
-        // Student student3 = new Student("MATOS69", "password", "Matthew", "MATOS69@e.ntu.edu.sg");
-        // Student student4 = new Student("JOSHAC69", "password", "Joshua", "JOSHAC69@e.ntu.edu.sg");
-
-        // add supervisors
-        // Supervisor supervisor1 = new Supervisor("JAMES", "password", "James", "JAMES@ntu.edu.sg");
-        // Supervisor supervisor2 = new Supervisor("LOKE", "password", "Loke Yuan Ren", "LOKE@ntu.edu.sg");
-        // Supervisor supervisor3 = new Supervisor("NEWTON", "password", "Newton Fernando", "NEWTON@ntu.edu.sg");
-
-        // add fyp coordinators
-        // FYPCoordinator fypCoordinator1 = new FYPCoordinator("LiFang", "password", "Li Fang", "ASFLI@ntu.edu.sg");
-
-        // add projects
-        // Project project1 = new Project(Supervisor.getSupervisorByID("JAMES"), "Project 1");
-        // Project project2 = new Project(Supervisor.getSupervisorByID("LOKE"), "Project 2");
-        // Project project3 = new Project(Supervisor.getSupervisorByID("NEWTON"), "Project 3");
-        // Project project4 = new Project(Supervisor.getSupervisorByID("JAMES"), "Project 4");
-
         InitializeApplication.assignAllLists();
 
         while (quit == 0) {
@@ -302,8 +281,7 @@ public class App {
                                             try {
                                                 projectID = sc.nextInt();
                                                 sc.nextLine();
-                                                while (Project.getProjectByID(projectID)
-                                                        .getProjectStatus() != ProjectStatus.AVAILABLE) {
+                                                while (Project.getProjectByID(projectID).getProjectStatus() != ProjectStatus.AVAILABLE) {
                                                     System.out.println(
                                                             "Invalid input. Please enter a valid projectID. It must be an available project from the list!");
                                                     projectID = sc.nextInt();
