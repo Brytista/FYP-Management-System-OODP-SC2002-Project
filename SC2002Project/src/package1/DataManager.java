@@ -104,7 +104,7 @@ public class DataManager {
                 // index 5: studentsManaged
                 List<String> studentManaged = new ArrayList<>();
 
-                if (supervisor.studentManaged.isEmpty()) {
+                if (supervisor.getStudentsManaged().isEmpty()) {
                     studentManaged.add("None;");
 
                 } else {

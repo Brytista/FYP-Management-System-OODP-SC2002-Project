@@ -16,7 +16,7 @@ public abstract class StudentRequestWithString extends StudentRequest {
     /**
      * A boolean that represents if the request has been reviewed or not.
      */
-    boolean isReviewed;
+    private boolean isReviewed;
 
     /**
      * Constructor for creating a new student request with a string-based new project title

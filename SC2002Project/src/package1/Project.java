@@ -31,7 +31,7 @@ public class Project {
     /**
      * the list of all projects
      */
-    static List<Project> projectList = new ArrayList<Project>();
+    private static List<Project> projectList = new ArrayList<Project>();
 
     /**
      * Constructs a new Project object with a unique project ID, supervisor, project title,

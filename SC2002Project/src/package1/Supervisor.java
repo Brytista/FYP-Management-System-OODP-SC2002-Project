@@ -18,13 +18,13 @@ public class Supervisor extends User {
      * Represents a list of Project being handled by the supervisor.
      * An ArrayList is used to store the projects.
      */
-    List<Project> projectList = new ArrayList<Project>();
+    private List<Project> projectList = new ArrayList<Project>();
     
     /**
      * Represents a list of Request objects that are pending.
      * An ArrayList is used to store the pending requests.
      */
-    List<Request> pendingRequest = new ArrayList<Request>();
+    private List<Request> pendingRequest = new ArrayList<Request>();
 
     /**
      * Represents a list of available requests that can be made.
@@ -50,7 +50,7 @@ public class Supervisor extends User {
      * Represents a list of Student managed by a supervisor.
      * An ArrayList is used to store the students.
      */
-    List<Student> studentManaged = new ArrayList<Student>();
+    private List<Student> studentManaged = new ArrayList<Student>();
 
     /**
      * Represents a Scanner object used for reading input from the user.
