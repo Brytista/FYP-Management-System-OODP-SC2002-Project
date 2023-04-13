@@ -503,10 +503,9 @@ public class Supervisor extends User {
     }
 
     /**
-     * Adds the specified Supervisor to the allSupervisor list.
-     * 
-     * @param supervisor the Supervisor to add
-     * @return 1 if the Supervisor was added successfully, 0 if an error occurred
+     * Retrieves the list of all Supervisor objects.
+     *
+     * @return A list of Supervisor objects representing all supervisors
      */
     public static List<Supervisor> getSupervisors() {
         return allSupervisor;
@@ -627,10 +626,10 @@ public class Supervisor extends User {
     }
 
     /**
-     * Determines if the specified student belongs to the supervisor.
+     * Assigns a list of students to the studentManaged attribute of the Supervisor object.
      *
-     * @param student the student to check
-     * @return true if the student belongs to the supervisor, false otherwise
+     * @param students A list of Student objects to be assigned as managed students
+     * @return 1 if the assignment is successful, 0 if an exception occurs
      */
     public int assignStudentManaged(List<Student> students) {
         try {
