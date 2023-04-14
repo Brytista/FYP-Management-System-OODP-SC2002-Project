@@ -42,6 +42,18 @@ public class RequestChangeSupervisor extends SupervisorRequest {
             }
 
             if(project.getProjectStatus()==ProjectStatus.ALLOCATED){
+            if(!replacementSupervisor.capReached()){
+                try{
+                    project.changeProjectStatus(ProjectStatus.AVAILABLE); // change the project status to available
+                }
+                 catch (Exception e) {
+                    this.reject();
+                    return 0; 
+                }
+            }
+        }
+
+            if(project.getProjectStatus()==ProjectStatus.ALLOCATED){
             if(replacementSupervisor.capReached()){
                 System.out.println("The replacement supervisor has reached cap number of student managed, you cannot accept the request. Press anything to reject the request.");
                 int answer; 
