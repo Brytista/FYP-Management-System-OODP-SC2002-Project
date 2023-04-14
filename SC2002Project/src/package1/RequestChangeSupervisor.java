@@ -41,7 +41,7 @@ public class RequestChangeSupervisor extends SupervisorRequest {
                 return 0; // failure, sender or recipient is null
             }
 
-            if(project.getProjectStatus()==ProjectStatus.ALLOCATED){
+            if(project.getProjectStatus()==ProjectStatus.UNAVAILABLE){
             if(!replacementSupervisor.capReached()){
                 try{
                     project.changeProjectStatus(ProjectStatus.AVAILABLE); // change the project status to available
