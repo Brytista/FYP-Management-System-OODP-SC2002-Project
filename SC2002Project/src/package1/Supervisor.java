@@ -519,6 +519,7 @@ public class Supervisor extends User {
      */
     public static int assignSupervisorsList(List<Supervisor> supervisorsList) {
         try {
+            allSupervisor.clear();
             allSupervisor = supervisorsList;
             System.out.println("Supervisor list assigned with length " + allSupervisor.size() + ".");
         } catch (Exception e) {

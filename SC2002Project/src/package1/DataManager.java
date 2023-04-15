@@ -117,7 +117,7 @@ public class DataManager {
                             studentID = "None;";
                         }
                         
-                        studentManaged.add(studentID);
+                        studentManaged.add(studentID + ";");
                     }
                 }
 
