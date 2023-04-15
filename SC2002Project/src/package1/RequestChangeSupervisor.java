@@ -48,6 +48,7 @@ public class RequestChangeSupervisor extends SupervisorRequest {
                 }
                  catch (Exception e) {
                     this.reject();
+                    System.out.println("Request rejected.");
                     return 0; 
                 }
             }
@@ -55,13 +56,14 @@ public class RequestChangeSupervisor extends SupervisorRequest {
 
             if(project.getProjectStatus()==ProjectStatus.ALLOCATED){
             if(replacementSupervisor.capReached()){
-                System.out.println("The replacement supervisor has reached cap number of student managed, you cannot accept the request. Press anything to reject the request.");
+                System.out.println("The replacement supervisor has reached cap number of student managed, you approve accept the request. Press anything to reject the request.");
                 int answer; 
                 try{
                     sc = new Scanner(System.in);
                     answer = sc.nextInt();
                     sc.nextLine(); // consume the newline
                     this.reject();
+                    System.out.println("Request rejected.");
                     return 0; 
                 } catch (Exception e) {
                     this.reject();
@@ -164,7 +166,7 @@ public class RequestChangeSupervisor extends SupervisorRequest {
     public void displayRequestDescription(){
         try {
             if(project.getProjectStatus()==ProjectStatus.ALLOCATED&&replacementSupervisor.capReached()){
-                extraDescription = "The replacement supervisor has reached cap number of student managed, you cannot accept the request." + "He/She is currently managing "+ replacementSupervisor.getStudentsManaged().size() + " students."; 
+                extraDescription = "The replacement supervisor has reached cap number of student managed, you approve accept the request." + "He/She is currently managing "+ replacementSupervisor.getStudentsManaged().size() + " students."; 
             }
             else{
                 extraDescription = "No extra notice"; 

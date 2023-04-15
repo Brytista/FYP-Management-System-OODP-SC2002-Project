@@ -134,6 +134,7 @@ public class InitializeApplication {
             return 0;
         }
 
+        studentList.clear();
         studentList = studentListReturn;
 
         studentListIterCount++;
@@ -211,6 +212,7 @@ public class InitializeApplication {
             return 0;
         }
 
+        supervisorList.clear();
         supervisorList = supervisorListReturn;
 
         supervisorListIterCount++;
@@ -300,17 +302,15 @@ public class InitializeApplication {
                 ProjectStatus projectStatus = ProjectStatus.valueOf(fields[3]);
                 project.changeProjectStatus(projectStatus);
 
-                project.changeProjectID(Integer.parseInt(fields[0]));
+                project.changeProjectID(Integer.parseInt(fields[0])); 
 
                 if (!fields[4].equals("None")) {
                     Student student = Student.getStudentByID(fields[4]);
-                    project.changeStudent(student); // Assign the student to the project
+                    project.changeStudent(student);
                 }
 
                 projectListReturn.add(project);
-
-                supervisor.addProject(project);
-
+                
                 count++;
             }
 
@@ -327,6 +327,7 @@ public class InitializeApplication {
             return 0;
         }
 
+        projectList.clear();
         projectList = projectListReturn;
 
         return 1;

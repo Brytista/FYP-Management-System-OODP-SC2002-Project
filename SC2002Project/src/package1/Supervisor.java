@@ -722,6 +722,7 @@ public class Supervisor extends User {
     public int addProject(Project project){
         try {
             if(project == null) return 0;
+            if(doesProjectBelongToSupervisor(project)==true) return 0;// Check if the project already belongs to the supervisor
             projectList.add(project);
             return 1;
         } catch (Exception e) {

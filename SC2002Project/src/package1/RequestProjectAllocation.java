@@ -36,13 +36,14 @@ public class RequestProjectAllocation extends StudentRequest {
         Scanner sc;
         supervisor = project.getSupervisor();
         if(supervisor.capReached()){
-            System.out.println("The replacement supervisor has reached cap number of student managed. Press anything to reject the request.");
+            System.out.println("The supervisor has reached cap number of student managed. Press anything to reject the request.");
             int answer; 
             try{
                 sc = new Scanner(System.in);
                 answer = sc.nextInt();
                 sc.nextLine(); // consume the newline
                 this.reject();
+                System.out.println("Request rejected.");
                 return 0; 
             } catch (Exception e) {
                 this.reject();
@@ -126,7 +127,7 @@ public void displayRequestDescription(){
     try {
         supervisor = project.getSupervisor();
         if(supervisor.capReached()){
-            extraDescription = "The replacement supervisor has reached cap number of student managed, you cannot reject it" + " He/She is currently managing "+ supervisor.getStudentsManaged().size() + " students."; 
+            extraDescription = "The supervisor has reached cap number of student managed, you approve accept it" + " He/She is currently managing "+ supervisor.getStudentsManaged().size() + " students."; 
         }
         else{
             extraDescription = "No extra notice"; 
