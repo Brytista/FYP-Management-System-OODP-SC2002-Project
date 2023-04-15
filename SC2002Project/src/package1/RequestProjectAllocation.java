@@ -46,6 +46,7 @@ public class RequestProjectAllocation extends StudentRequest {
                 return 0; 
             } catch (Exception e) {
                 this.reject();
+                System.out.println("Request rejected.");
                 return 0; 
             }
         }

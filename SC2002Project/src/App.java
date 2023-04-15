@@ -390,6 +390,7 @@ public class App {
                                     if (currentStudent.isProjectAssigned() == false) {
                                         currentStudent.viewAllProjects();
                                     } else {
+                                        System.out.println("");
                                         System.out.println(
                                                 "You Cannot view all projects, as you are assigned a project. Instead, here is your project:");
                                         currentStudent.displayProjects();
