@@ -298,13 +298,13 @@ public class InitializeApplication {
                 Project project = new Project(supervisor, projectTitle);
 
                 ProjectStatus projectStatus = ProjectStatus.valueOf(fields[3]);
-                project.projectStatus = projectStatus;
+                project.changeProjectStatus(projectStatus);
 
-                project.projectID = Integer.parseInt(fields[0]);
+                project.changeProjectID(Integer.parseInt(fields[0]));
 
                 if (!fields[4].equals("None")) {
                     Student student = Student.getStudentByID(fields[4]);
-                    project.student = student;
+                    project.changeStudent(student); // Assign the student to the project
                 }
 
                 projectListReturn.add(project);

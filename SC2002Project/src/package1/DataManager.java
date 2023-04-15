@@ -189,17 +189,17 @@ public class DataManager {
             for (Project project : projects) {
 
                 // index 0: projectID
-                String userID = String.valueOf(project.projectID);
+                String userID = String.valueOf(project.getProjectID());
                 // index 1: supervisorID
-                String supervisorID = project.supervisor.getUserID();
+                String supervisorID = project.getSupervisor().getUserID();
                 // index 2: projectTitle
                 String name = project.getProjectTitle();
                 // index 3: projectStatus
-                String projectStatus = String.valueOf(project.projectStatus);
+                String projectStatus = String.valueOf(project.getProjectStatus());
                 // index 4: studentID
                 String studentID;
                 try {
-                    studentID = project.student.getUserID();
+                    studentID = project.getStudent().getUserID();
                 } catch (Exception e) {
                     studentID = "None";
                 }

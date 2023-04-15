@@ -11,23 +11,23 @@ public class Project {
     /**
      * the ID of the project
      */
-    int projectID;
+    private int projectID;
     /**
      * the supervisor who is in charge of this project
      */
-    Supervisor supervisor;
+    private Supervisor supervisor;
     /**
      * the project title
      */
-    String projectTitle;
+    private String projectTitle;
     /**
      * the status of the project (AVAILABLE, RESERVED, UNAVAILABLE, ALLOCATED)
      */
-    ProjectStatus projectStatus;
+    private ProjectStatus projectStatus;
     /**
      * the student that is allocated to this project (if any)
      */
-    Student student;
+    private Student student;
     /**
      * the list of all projects
      */
