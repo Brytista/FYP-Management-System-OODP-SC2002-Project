@@ -134,6 +134,7 @@ public class InitializeApplication {
             return 0;
         }
 
+        studentList.clear();
         studentList = studentListReturn;
 
         studentListIterCount++;
@@ -211,6 +212,7 @@ public class InitializeApplication {
             return 0;
         }
 
+        supervisorList.clear();
         supervisorList = supervisorListReturn;
 
         supervisorListIterCount++;
@@ -308,9 +310,7 @@ public class InitializeApplication {
                 }
 
                 projectListReturn.add(project);
-
-                supervisor.addProject(project);
-
+                
                 count++;
             }
 
@@ -327,6 +327,7 @@ public class InitializeApplication {
             return 0;
         }
 
+        projectList.clear();
         projectList = projectListReturn;
 
         return 1;
