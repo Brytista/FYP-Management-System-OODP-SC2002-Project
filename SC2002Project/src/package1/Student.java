@@ -518,6 +518,7 @@ public class Student extends User {
      */
     public static int assignStudentsList(List<Student> studentsList) {
         try {
+            students.clear();
             students = studentsList;
             System.out.println("Students list assigned with length " + students.size() + ".");
         } catch (Exception e) {

@@ -235,8 +235,10 @@ public class Project {
             System.out.format("Project Title: %s\n", this.projectTitle);
             System.out.format("Project Status: %s\n", this.projectStatus);
             if (this.projectStatus == ProjectStatus.ALLOCATED) {
-                System.out.format("Student Name: %s\n", this.student.getUserName());
-                System.out.format("Student Email: %s\n", this.student.getEmail());
+                if (this.student != null) {
+                    System.out.format("Student Name: %s\n", this.student.getUserName());
+                    System.out.format("Student Email: %s\n", this.student.getEmail());
+                }
             }
             System.out.println("");
         } catch (Exception e) {
@@ -372,6 +374,7 @@ public class Project {
     */
     public static int assignProjectList(List<Project> retrievedProjectList) {
         try {
+            projectList.clear();
             projectList = retrievedProjectList;
             System.out.println("Project list assigned with length " + projectList.size() + ".");
         } catch (Exception e) {

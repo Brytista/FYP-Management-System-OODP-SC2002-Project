@@ -7,16 +7,22 @@ import java.io.FileReader;
 import java.nio.file.Paths;
 
 /**
- * The InitializeApplication class is responsible for loading data from CSV files
- * and initializing the application with the loaded data. It reads data for students,
- * supervisors, FYP coordinators, and projects from their respective CSV files and
+ * The InitializeApplication class is responsible for loading data from CSV
+ * files
+ * and initializing the application with the loaded data. It reads data for
+ * students,
+ * supervisors, FYP coordinators, and projects from their respective CSV files
+ * and
  * assigns the loaded data to the corresponding classes.
  *
- * The class provides methods for loading each type of data individually and a method
- * to load all data at once. Upon successful loading of data, it assigns the lists to
+ * The class provides methods for loading each type of data individually and a
+ * method
+ * to load all data at once. Upon successful loading of data, it assigns the
+ * lists to
  * their respective classes.
  */
 public class InitializeApplication {
+
     /**
      * A static list containing all Student objects in the system.
      */
@@ -37,11 +43,14 @@ public class InitializeApplication {
      */
     private static List<Project> projectList = new ArrayList<>();
 
+    private static int studentListIterCount = 0;
+    private static int supervisorListIterCount = 0;
 
     /** Constructor for the InitializeApplication class. */
-    public InitializeApplication() {}
+    public InitializeApplication() {
+    }
 
-     /**
+    /**
      * Assigns the loaded lists to their respective classes.
      *
      * @return 1 if the lists are loaded successfully, 0 if there was an error
@@ -50,11 +59,6 @@ public class InitializeApplication {
         int loaded = InitializeApplication.loadAllLists();
 
         if (loaded == 1) {
-            Student.assignStudentsList(studentList);
-            Supervisor.assignSupervisorsList(supervisorList);
-            FYPCoordinator.assignFYPCoordinatorsList(fypCoordinatorList);
-            Project.assignProjectList(projectList);
-
             System.out.println("Lists loaded successfully");
             return 1;
 
@@ -70,6 +74,8 @@ public class InitializeApplication {
      * @return 1 if the list is loaded successfully, 0 if there was an error
      */
     public static int loadStudentList() {
+
+        List<Student> studentListReturn = new ArrayList<>();
 
         // Create a BufferedReader object to read the CSV file
         String filePath = Paths.get("files/studentList.csv").toString();
@@ -93,22 +99,24 @@ public class InitializeApplication {
                 // Create a Student object and add it to the studentList
                 Student student = new Student(userID, password, name, email);
 
-                // If projectID is greater than 0, assign the student's project
-                int projectID = Integer.parseInt(fields[4]);
-                if (projectID > 0) {
-                    Project project = Project.getProjectByID(projectID);
-                    student.changeProject(project);
+                if (studentListIterCount > 0) {
+                    // If projectID is greater than 0, assign the student's project
+                    int projectID = Integer.parseInt(fields[4]);
+                    if (projectID > 0) {
+                        Project project = Project.getProjectByID(projectID);
+                        student.changeProject(project);
+                    }
+
+                    // Assign the student's requestProject boolean
+                    boolean requestProject = Boolean.parseBoolean(fields[5]);
+                    student.setRequestProject(requestProject);
+
+                    // Assign the student's isDeregistered boolean
+                    boolean isDeregistered = Boolean.parseBoolean(fields[6]);
+                    student.setIsDeregistered(isDeregistered);
                 }
 
-                // Assign the student's requestProject boolean
-                boolean requestProject = Boolean.parseBoolean(fields[5]);
-                student.setRequestProject(requestProject);
-
-                // Assign the student's isDeregistered boolean
-                boolean isDeregistered = Boolean.parseBoolean(fields[6]);
-                student.setIsDeregistered(isDeregistered);
-
-                studentList.add(student);
+                studentListReturn.add(student);
 
                 count++;
             }
@@ -126,6 +134,9 @@ public class InitializeApplication {
             return 0;
         }
 
+        studentList = studentListReturn;
+
+        studentListIterCount++;
         return 1;
     }
 
@@ -135,6 +146,8 @@ public class InitializeApplication {
      * @return 1 if the list is loaded successfully, 0 if there was an error
      */
     public static int loadSupervisorList() {
+
+        List<Supervisor> supervisorListReturn = new ArrayList<>();
 
         // Create a BufferedReader object to read the CSV file
         String filePath = Paths.get("files/supervisorList.csv").toString();
@@ -164,20 +177,23 @@ public class InitializeApplication {
                     supervisor.numberOfProjectManaged = numberOfProjectManaged;
                 }
 
-                // Assign the supervisor's managed students
-                String[] retrievedStudentsManaged = fields[5].split(";");
-                if (retrievedStudentsManaged[0] != "None") {
-                    List<Student> studentsManaged = new ArrayList<Student>();
+                if (supervisorListIterCount > 0) {
+                    // Assign the supervisor's managed students
+                    String[] retrievedStudentsManaged = fields[5].split(";");
 
-                    for (String studentID : retrievedStudentsManaged) {
-                        Student student = Student.getStudentByID(studentID);
-                        studentsManaged.add(student);
+                    if (!retrievedStudentsManaged[0].equals("None")) {
+                        List<Student> studentsManaged = new ArrayList<Student>();
+
+                        for (String studentID : retrievedStudentsManaged) {
+                            Student student = Student.getStudentByID(studentID);
+                            studentsManaged.add(student);
+                        }
+
+                        supervisor.assignStudentManaged(studentsManaged);
                     }
-
-                    supervisor.assignStudentManaged(studentsManaged);
                 }
 
-                supervisorList.add(supervisor);
+                supervisorListReturn.add(supervisor);
 
                 count++;
             }
@@ -195,6 +211,9 @@ public class InitializeApplication {
             return 0;
         }
 
+        supervisorList = supervisorListReturn;
+
+        supervisorListIterCount++;
         return 1;
 
     }
@@ -256,6 +275,8 @@ public class InitializeApplication {
      */
     public static int loadProjectList() {
 
+        List<Project> projectListReturn = new ArrayList<>();
+
         // Create a BufferedReader object to read the CSV file
         String filePath = Paths.get("files/projectList.csv").toString();
         int count = 0;
@@ -276,16 +297,19 @@ public class InitializeApplication {
                 // Create a new project object
                 Project project = new Project(supervisor, projectTitle);
 
-                // Fetch the project status and student
                 ProjectStatus projectStatus = ProjectStatus.valueOf(fields[3]);
-                Student student = Student.getStudentByID(fields[4]);
-
-                // Assign the project's projectID, projectStatus and student
-                //project.projectID = Integer.parseInt(fields[0]);
                 project.projectStatus = projectStatus;
-                project.student = student;
-                
-                projectList.add(project);
+
+                project.projectID = Integer.parseInt(fields[0]);
+
+                if (!fields[4].equals("None")) {
+                    Student student = Student.getStudentByID(fields[4]);
+                    project.student = student;
+                }
+
+                projectListReturn.add(project);
+
+                supervisor.addProject(project);
 
                 count++;
             }
@@ -303,21 +327,55 @@ public class InitializeApplication {
             return 0;
         }
 
+        projectList = projectListReturn;
+
         return 1;
 
     }
 
     /**
-     * Loads all lists (student, supervisor, FYP Coordinator, and project) from CSV files.
+     * Loads all lists (student, supervisor, FYP Coordinator, and project) from CSV
+     * files.
      *
      * @return 1 if all lists are loaded successfully, 0 if there was an error
      */
     public static int loadAllLists() {
 
-        int loadedStudents = InitializeApplication.loadStudentList();
-        int loadedSupervisors = InitializeApplication.loadSupervisorList();
-        int loadedFYPCoordinators = InitializeApplication.loadFYPCoordinatorList();
-        int loadedProjects = InitializeApplication.loadProjectList();
+        int loadedStudents, loadedSupervisors, loadedFYPCoordinators, loadedProjects;
+
+        // 1. Load the FYPCoordinator list
+        loadedFYPCoordinators = InitializeApplication.loadFYPCoordinatorList();
+        FYPCoordinator.assignFYPCoordinatorsList(fypCoordinatorList);
+
+        // 2. Load the Student list, assign no project yet
+        loadedStudents = InitializeApplication.loadStudentList();
+        // System.out.println("Step 2 studentList length: " + studentList.size());
+        Student.assignStudentsList(studentList);
+
+        // 3. Load the Supervisor list, assign no student yet
+        loadedSupervisors = InitializeApplication.loadSupervisorList();
+        // System.out.println("Step 3 supervisorList length: " + supervisorList.size());
+        Supervisor.assignSupervisorsList(supervisorList);
+
+        // 4. Load the Project list
+        loadedProjects = InitializeApplication.loadProjectList();
+        // System.out.println("Step 4 projectList length: " + projectList.size());
+        Project.assignProjectList(projectList);
+
+        // 5. Load the Student list, assign project
+        loadedStudents = InitializeApplication.loadStudentList();
+        // System.out.println("Step 5 studentList length: " + studentList.size());
+        Student.assignStudentsList(studentList);
+
+        // 6. Load the Supervisor list, assign student
+        loadedSupervisors = InitializeApplication.loadSupervisorList();
+        // System.out.println("Step 6 supervisorList length: " + supervisorList.size());
+        Supervisor.assignSupervisorsList(supervisorList);
+
+        // 7. Load the Project list, assign to respective supervisors
+        loadedProjects = InitializeApplication.loadProjectList();
+        // System.out.println("Step 4 projectList length: " + projectList.size());
+        Project.assignProjectList(projectList);
 
         int result;
         if (loadedStudents == 1 && loadedSupervisors == 1 && loadedFYPCoordinators == 1 && loadedProjects == 1) {
