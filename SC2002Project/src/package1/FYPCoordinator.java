@@ -214,7 +214,7 @@ public class FYPCoordinator extends Supervisor {
         try {
             coordinators.clear();
             coordinators = coordList;
-            System.out.println("FYPCoord list assigned with length " + coordinators.size() + ".");
+            // System.out.println("FYPCoord list assigned with length " + coordinators.size() + ".");
         } catch (Exception e) {
             System.out.println("An error occurred while trying to assign the FYP Coordinator list: " + e.getMessage());
             return 0;

@@ -376,7 +376,7 @@ public class Project {
         try {
             projectList.clear();
             projectList = retrievedProjectList;
-            System.out.println("Project list assigned with length " + projectList.size() + ".");
+            // System.out.println("Project list assigned with length " + projectList.size() + ".");
         } catch (Exception e) {
             System.out.println("An error occurred while trying to assign the project list: " + e.getMessage());
             return 0;
