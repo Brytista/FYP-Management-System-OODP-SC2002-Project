@@ -3,7 +3,7 @@
 ## Setup Instruction
 To run this app, make sure that you have installed Java on your device. The Java files have already been compiled, and you only need to execute the program. To do this, follow the steps below:
 
-1. Open your console or terminal application.
+1. Open your console or terminal application (e.g. CMD).
 2. Navigate to the src folder located within the SC2002Project folder by entering the appropriate cd command.
 3. To run the application, type java App and press Enter. This will start the app and initialize all necessary data.
 
