@@ -59,7 +59,7 @@ public class InitializeApplication {
         int loaded = InitializeApplication.loadAllLists();
 
         if (loaded == 1) {
-            System.out.println("Lists loaded successfully");
+            // System.out.println("Lists loaded successfully");
             return 1;
 
         } else {

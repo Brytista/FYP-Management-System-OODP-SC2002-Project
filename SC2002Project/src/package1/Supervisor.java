@@ -521,7 +521,7 @@ public class Supervisor extends User {
         try {
             allSupervisor.clear();
             allSupervisor = supervisorsList;
-            System.out.println("Supervisor list assigned with length " + allSupervisor.size() + ".");
+            // System.out.println("Supervisor list assigned with length " + allSupervisor.size() + ".");
         } catch (Exception e) {
             System.out.println("An error occurred while trying to assign the supervisor list: " + e.getMessage());
             return 0;

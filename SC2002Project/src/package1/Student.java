@@ -173,7 +173,7 @@ public class Student extends User {
             if (this.isProjectAssigned()) {
                 return this.project.getProjectID();
             } else {
-                System.out.println("No Project Is Assigned!");
+                // System.out.println("No Project Is Assigned!");
                 return -1;
             }
         } catch (Exception e) {
@@ -520,7 +520,7 @@ public class Student extends User {
         try {
             students.clear();
             students = studentsList;
-            System.out.println("Students list assigned with length " + students.size() + ".");
+            // System.out.println("Students list assigned with length " + students.size() + ".");
         } catch (Exception e) {
             System.out.println("An error occurred while trying to assign the student list: " + e.getMessage());
             return 0;
