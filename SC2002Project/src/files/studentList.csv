@@ -1,11 +1,11 @@
-YCHERN,password,CHERN ,YCHERN@e.ntu.edu.sg,-1,false,true
-KOH1,password,KOH ,KOH1@e.ntu.edu.sg,-1,false,false
-BR015,password,BRANDON ,BR015@e.ntu.edu.sg,-1,false,false
-CT113,password,CALVIN ,CT113@e.ntu.edu.sg,-1,false,false
-YCN019,password,CHAN,YCN019@e.ntu.edu.sg,-1,false,false
-DL007,password,DENISE,DL007@e.ntu.edu.sg,-1,false,false
-DON84,password,DONG,DON84@e.ntu.edu.sg,-1,false,false
-ELI34,password,ERNEST,ELI34@e.ntu.edu.sg,-1,false,false
-LE51,password,LEE ,LE51@e.ntu.edu.sg,-1,false,false
-SL22,password,LIU ,SL22@e.ntu.edu.sg,-1,false,false
-AKY013,password,RAWAL,AKY013@e.ntu.edu.sg,-1,false,false
+YCHERN,password,CHERN ,YCHERN@e.ntu.edu.sg,-1,FALSE,FALSE
+KOH1,password,KOH ,KOH1@e.ntu.edu.sg,-1,FALSE,FALSE
+BR015,password,BRANDON ,BR015@e.ntu.edu.sg,-1,FALSE,FALSE
+CT113,password,CALVIN ,CT113@e.ntu.edu.sg,-1,FALSE,FALSE
+YCN019,password,CHAN,YCN019@e.ntu.edu.sg,-1,FALSE,FALSE
+DL007,password,DENISE,DL007@e.ntu.edu.sg,-1,FALSE,FALSE
+DON84,password,DONG,DON84@e.ntu.edu.sg,-1,FALSE,FALSE
+ELI34,password,ERNEST,ELI34@e.ntu.edu.sg,-1,FALSE,FALSE
+LE51,password,LEE ,LE51@e.ntu.edu.sg,-1,FALSE,FALSE
+SL22,password,LIU ,SL22@e.ntu.edu.sg,-1,FALSE,FALSE
+AKY013,password,RAWAL,AKY013@e.ntu.edu.sg,-1,FALSE,FALSE
